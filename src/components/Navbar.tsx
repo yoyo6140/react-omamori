@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { Search, ShoppingBag, Menu, X } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Search, ShoppingBag, Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -11,37 +11,33 @@ const Navbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navLinks = [
-    { name: '御守地圖', href: '#map' },
-    { name: '尋找祝福', href: '#wishes' },
-    { name: '管理者入口', href: '#admin' },
+    { name: "尋找祝福", href: "#wishes" },
+    { name: "御守地圖", href: "#map" },
   ];
 
   return (
-    <nav 
+    <nav
       className={`fixed w-full z-50 transition-all duration-500 px-8 py-4 ${
-        isScrolled 
-          ? 'bg-white/80 backdrop-blur-md shadow-sm py-3' 
-          : 'bg-transparent py-6'
+        isScrolled ? "bg-white/80 backdrop-blur-md shadow-sm py-3" : "bg-transparent py-6"
       }`}
     >
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        
+      <div className="max-w-7xl mx-auto flex items-center">
         {/* Logo */}
         <div className="text-2xl font-bold tracking-widest text-[#B22222] font-serif">
-        拾守｜撿起你的每一個願望
+          拾守｜祈願願望成真
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-12 text-sm tracking-[0.2em] uppercase font-light">
+        <div className="hidden md:flex space-x-12 tracking-[0.2em] uppercase font-light ml-auto">
           {navLinks.map((link) => (
-            <a 
+            <a
               key={link.name}
-              href={link.href} 
+              href={link.href}
               className="hover:text-[#B22222] transition-colors duration-300 relative group"
             >
               {link.name}
@@ -51,15 +47,14 @@ const Navbar = () => {
         </div>
 
         {/* Icons Area */}
-        <div className="flex items-center space-x-6 text-[#1A1A1A]">
-          <Search className="w-5 h-5 cursor-pointer hover:text-[#B22222] transition-colors" />
+        <div className="flex items-center space-x-6 text-[#1A1A1A] ml-auto">
           <div className="relative cursor-pointer group">
-            <ShoppingBag className="w-5 h-5 group-hover:text-[#B22222] transition-colors" />
+            <ShoppingBag className="w-8 h-8 group-hover:text-[#B22222] transition-colors" />
             <span className="absolute -top-2 -right-2 bg-[#B22222] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
               0
             </span>
           </div>
-          
+
           {/* Mobile Menu Toggle */}
           <div className="md:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X /> : <Menu />}
@@ -71,9 +66,9 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="absolute top-full left-0 w-full bg-white border-t md:hidden flex flex-col p-8 space-y-6 shadow-xl animate-in fade-in slide-in-from-top-4">
           {navLinks.map((link) => (
-            <a 
+            <a
               key={link.name}
-              href={link.href} 
+              href={link.href}
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-lg tracking-widest hover:text-[#B22222]"
             >
