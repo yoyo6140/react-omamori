@@ -8,6 +8,11 @@
 
   --background: var(--off-white);
   --foreground: var(--sumi-black);
+
+  /* shadcn/ui (default) semantic color tokens (HSL) */
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --ring: 215 20.2% 65.1%;
 }
 
 @theme inline {
