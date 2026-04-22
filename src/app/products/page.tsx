@@ -25,6 +25,8 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { EditIcon, TrashIcon } from "lucide-react";
+import { useAdminProducts } from "@/hooks/useAdminProducts";
+import EditProduct from "@/components/products/EditProduct";
 
 type ProductRow = {
   id: string;
@@ -35,12 +37,29 @@ type ProductRow = {
 };
 
 const ProductsPage = () => {
-  const [products, setProducts] = useState<ProductRow[]>([
-    { id: "1", category: "衣服", content: "這是內容", num: 1, is_enabled: 1 },
-    { id: "2", category: "配件", content: "另一個內容", num: 2, is_enabled: 0 },
-  ]);
+  const { products, isLoading, errorMessage } = useAdminProducts();
+  const [localProducts, setLocalProducts] = useState<ProductRow[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  const totalNum = useMemo(() => products.reduce((sum, p) => sum + p.num, 0), [products]);
+  // 將 API products 轉成表格用的最小欄位（只在首次載入時同步一次，避免你切換 switch 時被覆蓋）
+  React.useEffect(() => {
+    if (products.length > 0 && localProducts.length === 0) {
+      setLocalProducts(
+        products.map((p: any) => ({
+          id: p.id,
+          category: p.category ?? "",
+          content: p.content ?? "",
+          num: Number(p.num ?? 0),
+          is_enabled: (p.is_enabled ?? 0) as 0 | 1,
+        })),
+      );
+    }
+  }, [products, localProducts.length]);
+
+  const totalNum = useMemo(
+    () => localProducts.reduce((sum, p) => sum + p.num, 0),
+    [localProducts],
+  );
 
   return (
     <div className="min-h-screen bg-[var(--off-white)]">
@@ -58,7 +77,20 @@ const ProductsPage = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {products.map((p) => (
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center text-black/60">
+                    載入中...
+                  </TableCell>
+                </TableRow>
+              ) : errorMessage ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center text-red-600">
+                    {errorMessage}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                localProducts.map((p) => (
                 <TableRow key={p.id}>
                   <TableCell className="font-medium text-center">{p.category}</TableCell>
                   <TableCell className="text-center">{p.content}</TableCell>
@@ -69,7 +101,7 @@ const ProductsPage = () => {
                         id={`enabled-${p.id}`}
                         checked={p.is_enabled === 1}
                         onCheckedChange={(checked) => {
-                          setProducts((prev) =>
+                          setLocalProducts((prev) =>
                             prev.map((x) =>
                               x.id === p.id ? { ...x, is_enabled: checked ? 1 : 0 } : x,
                             ),
@@ -83,13 +115,17 @@ const ProductsPage = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex justify-center gap-2">
-                      <EditIcon className="w-5 h-5 cursor-pointer" />
+                      <EditIcon
+                        className="w-5 h-5 cursor-pointer"
+                        onClick={() => setEditingId(p.id)}
+                      />
 
                       <TrashIcon className="w-5 h-5 cursor-pointer" />
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+                ))
+              )}
             </TableBody>
           </Table>
         </div>
@@ -120,6 +156,28 @@ const ProductsPage = () => {
             </PaginationContent>
           </Pagination>
         </div>
+
+        {editingId && (
+          <div
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4"
+            onClick={() => setEditingId(null)}
+          >
+            <div
+              className="w-full max-w-5xl rounded-2xl bg-white shadow-xl border border-black/10 p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between">
+                <div className="text-lg font-bold">編輯商品</div>
+                <Button variant="outline" size="sm" onClick={() => setEditingId(null)}>
+                  關閉
+                </Button>
+              </div>
+              <div className="mt-4 max-h-[70vh] overflow-auto">
+                <EditProduct id={editingId} />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

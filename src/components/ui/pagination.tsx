@@ -16,16 +16,8 @@ function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   );
 }
 
-function PaginationContent({
-  className,
-  ...props
-}: React.ComponentProps<"ul">) {
-  return (
-    <ul
-      className={cn("flex flex-row items-center gap-1", className)}
-      {...props}
-    />
-  );
+function PaginationContent({ className, ...props }: React.ComponentProps<"ul">) {
+  return <ul className={cn("flex flex-row items-center gap-1", className)} {...props} />;
 }
 
 function PaginationItem({ className, ...props }: React.ComponentProps<"li">) {
@@ -36,11 +28,7 @@ type PaginationLinkProps = {
   isActive?: boolean;
 } & React.ComponentProps<typeof Link>;
 
-function PaginationLink({
-  className,
-  isActive,
-  ...props
-}: PaginationLinkProps) {
+function PaginationLink({ className, isActive, ...props }: PaginationLinkProps) {
   return (
     <Link
       aria-current={isActive ? "page" : undefined}
@@ -54,10 +42,7 @@ function PaginationLink({
   );
 }
 
-function PaginationPrevious({
-  className,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>) {
+function PaginationPrevious({ className, ...props }: React.ComponentProps<typeof PaginationLink>) {
   return (
     <PaginationLink
       aria-label="Go to previous page"
@@ -65,31 +50,23 @@ function PaginationPrevious({
       {...props}
     >
       <ChevronLeft className="h-4 w-4" />
-      <span>上一頁</span>
     </PaginationLink>
   );
 }
 
-function PaginationNext({
-  className,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>) {
+function PaginationNext({ className, ...props }: React.ComponentProps<typeof PaginationLink>) {
   return (
     <PaginationLink
       aria-label="Go to next page"
       className={cn("gap-1 pr-2.5", className)}
       {...props}
     >
-      <span>下一頁</span>
       <ChevronRight className="h-4 w-4" />
     </PaginationLink>
   );
 }
 
-function PaginationEllipsis({
-  className,
-  ...props
-}: React.ComponentProps<"span">) {
+function PaginationEllipsis({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
       aria-hidden
@@ -111,4 +88,3 @@ export {
   PaginationNext,
   PaginationPrevious,
 };
-
