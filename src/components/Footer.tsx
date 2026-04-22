@@ -10,7 +10,7 @@ export default function Footer() {
           </div>
 
           <a
-            href="/LoginPage"
+            href="/login"
             className="md:ml-auto inline-flex items-center justify-center px-8 py-3 rounded-full bg-[var(--torii-red)] text-white hover:opacity-90 transition font-medium tracking-wide"
           >
             管理者登入

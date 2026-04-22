@@ -25,8 +25,11 @@ const notoSerifJP = Noto_Serif_JP({
 });
 
 export const metadata: Metadata = {
-  title: "御守之緣 | 來自日本各地的祝福",
+  title: "拾守",
   description: "來自日本各地的祝福，將千年神社的守護帶到您的身邊。",
+  icons: {
+    icon: [{ url: "/images/logo.jpeg" }],
+  },
 };
 
 export default function RootLayout({
