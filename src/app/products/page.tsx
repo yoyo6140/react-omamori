@@ -25,7 +25,11 @@ import {
 } from "@/components/ui/pagination";
 import { EditIcon, TrashIcon } from "lucide-react";
 import { useAdminProducts } from "@/hooks/useAdminProducts";
-import EditProduct from "@/components/products/EditProduct";
+import ConfirmModal from "@/components/common/ConfirmModal";
+import SuccessModal from "@/components/common/SuccessModal";
+import ErrorModal from "@/components/common/ErrorModal";
+import { EditProductModal } from "@/components/products/EditProduct";
+import { AddProductModal } from "@/components/products/AddProduct";
 
 type ProductRow = {
   id: string;
@@ -37,32 +41,38 @@ type ProductRow = {
 };
 
 const ProductsPage = () => {
-  const { products, isLoading, errorMessage, refetch } = useAdminProducts();
+  const { products, isLoading, errorMessage, refetch, deleteProduct, pagination, fetchPage } =
+    useAdminProducts();
   const [localProducts, setLocalProducts] = useState<ProductRow[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [isAddingOpen, setIsAddingOpen] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isDeleteSuccessOpen, setIsDeleteSuccessOpen] = useState(false);
+  const [isDeleteErrorOpen, setIsDeleteErrorOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  // 將 API products 轉成表格用的最小欄位（只在首次載入時同步一次，避免你切換 switch 時被覆蓋）
+  // 直接以 API products 當畫面資料來源
   React.useEffect(() => {
-    if (products.length > 0 && localProducts.length === 0) {
-      setLocalProducts(
-        products.map((p: any) => ({
-          id: p.id,
-          title: p.title ?? "",
-          category: p.category ?? "",
-          content: p.content ?? "",
-          num: Number(p.num ?? 0),
-          is_enabled: (p.is_enabled ?? 0) as 0 | 1,
-        })),
-      );
-    }
-  }, [products, localProducts.length]);
-
-  const totalNum = useMemo(() => localProducts.reduce((sum, p) => sum + p.num, 0), [localProducts]);
+    setLocalProducts(
+      products.map((p: any) => ({
+        id: p.id,
+        title: p.title ?? "",
+        category: p.category ?? "",
+        content: p.content ?? "",
+        num: Number(p.num ?? 0),
+        is_enabled: (p.is_enabled ?? 0) as 0 | 1,
+      })),
+    );
+  }, [products]);
 
   return (
     <div className="min-h-screen bg-[var(--off-white)]">
       <TopBar />
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-8 pt-28">
+        <div className="mb-3 flex justify-end">
+          <Button onClick={() => setIsAddingOpen(true)}>新增商品</Button>
+        </div>
         <div className="rounded-2xl bg-white shadow-sm border border-black/5 overflow-hidden">
           <Table>
             <TableHeader>
@@ -105,7 +115,13 @@ const ProductsPage = () => {
                           onClick={() => setEditingId(p.id)}
                         />
 
-                        <TrashIcon className="w-5 h-5 cursor-pointer" />
+                        <TrashIcon
+                          className="w-5 h-5 cursor-pointer"
+                          onClick={() => {
+                            setDeletingId(p.id);
+                            setIsDeleteConfirmOpen(true);
+                          }}
+                        />
                       </div>
                     </TableCell>
                   </TableRow>
@@ -119,86 +135,124 @@ const ProductsPage = () => {
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious href="#" />
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const cur = pagination?.current_page ?? 1;
+                    if (cur <= 1) return;
+                    fetchPage(cur - 1);
+                  }}
+                />
               </PaginationItem>
+              {Array.from({ length: pagination?.total_pages ?? 1 }, (_, i) => i + 1)
+                .slice(0, 7)
+                .map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      href="#"
+                      isActive={page === (pagination?.current_page ?? 1)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        fetchPage(page);
+                      }}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+              {(pagination?.total_pages ?? 1) > 7 ? (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              ) : null}
               <PaginationItem>
-                <PaginationLink href="#">1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  2
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const cur = pagination?.current_page ?? 1;
+                    const total = pagination?.total_pages ?? 1;
+                    if (cur >= total) return;
+                    fetchPage(cur + 1);
+                  }}
+                />
               </PaginationItem>
             </PaginationContent>
           </Pagination>
         </div>
 
-        {editingId && (
-          <div
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4"
-            onClick={() => setEditingId(null)}
-          >
-            <div
-              className="w-full max-w-5xl rounded-2xl bg-white shadow-xl border border-black/10 p-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between">
-                <div className="text-lg font-bold">編輯商品</div>
-                <Button variant="outline" size="sm" onClick={() => setEditingId(null)}>
-                  關閉
-                </Button>
-              </div>
-              <div className="mt-4 max-h-[70vh] overflow-auto">
-                <EditProduct
-                  id={editingId}
-                  onCancel={() => setEditingId(null)}
-                  onSaved={() => {
-                    setEditingId(null);
-                    refetch();
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
+        <EditProductModal
+          open={Boolean(editingId)}
+          id={editingId}
+          onClose={() => setEditingId(null)}
+          onSaved={() => {
+            setEditingId(null);
+            refetch();
+          }}
+        />
+
+        <AddProductModal
+          open={isAddingOpen}
+          onClose={() => setIsAddingOpen(false)}
+          onSaved={() => {
+            setIsAddingOpen(false);
+            setLocalProducts([]);
+            refetch();
+          }}
+        />
+
+        <ConfirmModal
+          open={isDeleteConfirmOpen}
+          title="確認刪除"
+          description="確定要刪除此商品嗎？刪除後無法復原。"
+          cancelText="取消"
+          confirmText={isDeleting ? "刪除中..." : "確認刪除"}
+          disabled={isDeleting}
+          onCancel={() => {
+            if (isDeleting) return;
+            setIsDeleteConfirmOpen(false);
+            setDeletingId(null);
+          }}
+          onConfirm={async () => {
+            if (!deletingId) return;
+            setIsDeleting(true);
+            try {
+              await deleteProduct(deletingId);
+              setIsDeleteConfirmOpen(false);
+              setIsDeleteSuccessOpen(true);
+            } catch {
+              setIsDeleteConfirmOpen(false);
+              setIsDeleteErrorOpen(true);
+            } finally {
+              setIsDeleting(false);
+            }
+          }}
+        />
+
+        <SuccessModal
+          open={isDeleteSuccessOpen}
+          title="刪除成功"
+          onConfirm={() => {
+            setIsDeleteSuccessOpen(false);
+            setDeletingId(null);
+            setLocalProducts([]);
+            refetch();
+          }}
+        />
+
+        <ErrorModal
+          open={isDeleteErrorOpen}
+          title="刪除失敗"
+          description="刪除失敗，請稍後再試。"
+          onClose={() => {
+            setIsDeleteErrorOpen(false);
+            setDeletingId(null);
+          }}
+        />
       </div>
     </div>
   );
 };
 
 export default ProductsPage;
-
-// {
-//   "success": true,
-//   "products": {
-//     "-L9tH8jxVb2Ka_DYPwng": {
-//       "category": "衣服3",
-//       "content": "這是內容",
-//       "description": "Sit down please 名設計師設計",
-//       "id": "-L9tH8jxVb2Ka_DYPwng",
-//       "is_enabled": 1,
-//       "num": 1,
-//       "origin_price": 500,
-//       "price": 600,
-//       "title": "[賣]動物園造型衣服3",
-//       "unit": "個",
-//       "imageUrl": "主圖網址",
-//       "imagesUrl": [
-//         "圖片網址一",
-//         "圖片網址二",
-//         "圖片網址三",
-//         "圖片網址四",
-//         "圖片網址五"
-//       ]
-//     }
-//   }
-// }

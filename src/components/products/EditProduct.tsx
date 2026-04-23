@@ -40,6 +40,48 @@ type GetAdminProductsAllResponse = {
   products: Record<string, Partial<GetAdminProduct>>;
 };
 
+export function EditProductModal({
+  open,
+  id,
+  onClose,
+  onSaved,
+}: {
+  open: boolean;
+  id: string | null;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  if (!open || !id) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-5xl rounded-2xl bg-white shadow-xl border border-black/10 p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between">
+          <div className="text-lg font-bold">編輯商品</div>
+          <Button variant="outline" size="sm" onClick={onClose}>
+            關閉
+          </Button>
+        </div>
+        <div className="mt-4 max-h-[70vh] overflow-auto">
+          <EditProduct
+            id={id}
+            onCancel={onClose}
+            onSaved={() => {
+              onSaved();
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function EditProduct({
   id,
   onCancel,

@@ -5,6 +5,11 @@ import Cookies from "js-cookie";
 const ADMIN_GET_PRODUCTS_ALL_URL = "/admin/products/all"; //取得全部商品列表
 const ADMIN_SEARCH_PRODUCT_ALL_URL = "/admin/products"; //搜尋商品列表
 const ADMIN_PRODUCT_URL = "/admin/product"; //更新或刪除商品（單筆）
+
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+const apiPath = process.env.NEXT_PUBLIC_API_PATH;
+const token = Cookies.get("access_token");
+
 export type AdminProduct = {
   id: string;
   category: string;
@@ -25,16 +30,27 @@ type AdminProductResponse = {
   product: AdminProduct;
 };
 
+type AdminProductsPagedResponse = {
+  success: boolean;
+  products: AdminProduct[];
+  pagination?: {
+    total_pages: number;
+    current_page: number;
+    has_pre?: boolean;
+    has_next?: boolean;
+    category?: string;
+  };
+};
+
 export function useAdminProducts() {
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [pagination, setPagination] = useState<AdminProductsPagedResponse["pagination"] | null>(
+    null,
+  );
 
   async function fetchAll() {
-    const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
-    const apiPath = process.env.NEXT_PUBLIC_API_PATH;
-    const token = Cookies.get("access_token");
-
     setIsLoading(true);
     setErrorMessage(null);
 
@@ -60,16 +76,37 @@ export function useAdminProducts() {
     }
   }
 
-  useEffect(() => {
-    fetchAll();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function editProduct(id: string, data: Partial<AdminProduct>) {
+  async function fetchPage(page = 1) {
     const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
     const apiPath = process.env.NEXT_PUBLIC_API_PATH;
     const token = Cookies.get("access_token");
 
+    setIsLoading(true);
+    setErrorMessage(null);
+
+    try {
+      const url = `${baseURL}/v2/api/${apiPath}${ADMIN_SEARCH_PRODUCT_ALL_URL}?page=${page}`;
+      const res = await axios.get<AdminProductsPagedResponse>(url, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      setProducts((res.data?.products ?? []) as AdminProduct[]);
+      setPagination(res.data?.pagination ?? null);
+    } catch (err: any) {
+      setErrorMessage(err?.response?.data?.message ?? err?.message ?? "取得商品列表失敗");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchPage(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function editProduct(id: string, data: Partial<AdminProduct>) {
     const url = `${baseURL}/v2/api/${apiPath}${ADMIN_PRODUCT_URL}/${id}`;
     const res = await axios.put<AdminProductResponse>(
       url,
@@ -79,11 +116,17 @@ export function useAdminProducts() {
     return res.data.product;
   }
 
-  async function deleteProduct(id: string) {
-    const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
-    const apiPath = process.env.NEXT_PUBLIC_API_PATH;
-    const token = Cookies.get("access_token");
+  async function addProduct(data: Partial<AdminProduct>) {
+    const url = `${baseURL}/v2/api/${apiPath}${ADMIN_PRODUCT_URL}`;
+    const res = await axios.post<AdminProductResponse>(
+      url,
+      { data: { ...(data as any) } },
+      { headers: { Authorization: token } },
+    );
+    return res.data.product;
+  }
 
+  async function deleteProduct(id: string) {
     const url = `${baseURL}/v2/api/${apiPath}${ADMIN_PRODUCT_URL}/${id}`;
     await axios.delete(url, { headers: { Authorization: token } });
   }
@@ -92,8 +135,11 @@ export function useAdminProducts() {
     products,
     isLoading,
     errorMessage,
-    refetch: fetchAll,
+    pagination,
+    fetchPage,
+    refetch: fetchPage,
     editProduct,
+    addProduct,
     deleteProduct,
   };
 }
