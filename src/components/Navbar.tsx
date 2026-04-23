@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { Search, ShoppingBag, Menu, X } from "lucide-react";
 
 const Navbar = () => {
@@ -48,12 +49,12 @@ const Navbar = () => {
 
         {/* Icons Area */}
         <div className="flex items-center space-x-6 text-[#1A1A1A] ml-auto">
-          <div className="relative cursor-pointer group">
+          <Link href="/carts" className="relative cursor-pointer group">
             <ShoppingBag className="w-8 h-8 group-hover:text-[#B22222] transition-colors" />
             <span className="absolute -top-2 -right-2 bg-[#B22222] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
               0
             </span>
-          </div>
+          </Link>
 
           {/* Mobile Menu Toggle */}
           <div className="md:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>

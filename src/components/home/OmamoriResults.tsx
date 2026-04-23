@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -86,35 +87,37 @@ export default function OmamoriResults({
             {visibleItems.map((item) => (
               <CarouselItem key={item.id} className="basis-full sm:basis-1/3 lg:basis-1/4">
                 <div className="mx-[10px]">
-                  <Card className="border-t-4 border-t-[var(--torii-red)] h-[420px] sm:h-[430px] md:h-[460px]">
-                    <CardContent className="p-4 md:p-5 h-full flex flex-col">
-                      <div className="bg-gray-50 mb-4 overflow-hidden relative group rounded-lg h-44 sm:h-52 md:h-[260px]">
-                        <div className="absolute top-4 right-4 px-3 py-1 bg-[var(--torii-red)] text-white text-[10px] tracking-widest">
-                          {item.locationLabel}
-                        </div>
-                        <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-50 transition duration-700 group-hover:scale-[1.02]" />
-                      </div>
-
-                      <div className="space-y-4 flex-1 min-h-0">
-                        <div className="flex justify-between items-start gap-6">
-                          <div>
-                            <h4 className="text-xl md:text-2xl font-bold font-serif">
-                              {item.title}
-                            </h4>
-                            <p className="text-sm text-[var(--torii-red)] font-medium">
-                              {item.shrine}
-                            </p>
+                  <Link href={`/home/info/${item.id}`} className="block">
+                    <Card className="border-t-4 border-t-[var(--torii-red)] h-[420px] sm:h-[430px] md:h-[460px] hover:shadow-md transition">
+                      <CardContent className="p-4 md:p-5 h-full flex flex-col">
+                        <div className="bg-gray-50 mb-4 overflow-hidden relative group rounded-lg h-44 sm:h-52 md:h-[260px]">
+                          <div className="absolute top-4 right-4 px-3 py-1 bg-[var(--torii-red)] text-white text-[10px] tracking-widest">
+                            {item.locationLabel}
                           </div>
-                          <span className="text-lg md:text-xl font-bold">
-                            {formatJPY(item.priceJPY)}
-                          </span>
+                          <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-50 transition duration-700 group-hover:scale-[1.02]" />
                         </div>
-                        <p className="text-sm text-gray-500 leading-relaxed italic overflow-hidden">
-                          {item.description}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
+
+                        <div className="space-y-4 flex-1 min-h-0">
+                          <div className="flex justify-between items-start gap-6">
+                            <div>
+                              <h4 className="text-xl md:text-2xl font-bold font-serif">
+                                {item.title}
+                              </h4>
+                              <p className="text-sm text-[var(--torii-red)] font-medium">
+                                {item.shrine}
+                              </p>
+                            </div>
+                            <span className="text-lg md:text-xl font-bold">
+                              {formatJPY(item.priceJPY)}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-500 leading-relaxed italic overflow-hidden">
+                            {item.description}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 </div>
               </CarouselItem>
             ))}
