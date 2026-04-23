@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 
 const ADMIN_GET_PRODUCTS_ALL_URL = "/admin/products/all"; //取得全部商品列表
 const ADMIN_SEARCH_PRODUCT_ALL_URL = "/admin/products"; //搜尋商品列表
-
+const ADMIN_PRODUCT_URL = "/admin/product"; //更新或刪除商品（單筆）
 export type AdminProduct = {
   id: string;
   category: string;
@@ -18,6 +18,11 @@ type AdminProductsAllResponse = {
   success: boolean;
   // 注意：後端回傳的 products 常用「物件 key 當 id」
   products: Record<string, Partial<AdminProduct>>;
+};
+
+type AdminProductResponse = {
+  success: boolean;
+  product: AdminProduct;
 };
 
 export function useAdminProducts() {
@@ -60,5 +65,35 @@ export function useAdminProducts() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { products, isLoading, errorMessage, refetch: fetchAll };
+  async function editProduct(id: string, data: Partial<AdminProduct>) {
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+    const apiPath = process.env.NEXT_PUBLIC_API_PATH;
+    const token = Cookies.get("access_token");
+
+    const url = `${baseURL}/v2/api/${apiPath}${ADMIN_PRODUCT_URL}/${id}`;
+    const res = await axios.put<AdminProductResponse>(
+      url,
+      { data: { id, ...(data as any) } },
+      { headers: { Authorization: token } },
+    );
+    return res.data.product;
+  }
+
+  async function deleteProduct(id: string) {
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+    const apiPath = process.env.NEXT_PUBLIC_API_PATH;
+    const token = Cookies.get("access_token");
+
+    const url = `${baseURL}/v2/api/${apiPath}${ADMIN_PRODUCT_URL}/${id}`;
+    await axios.delete(url, { headers: { Authorization: token } });
+  }
+
+  return {
+    products,
+    isLoading,
+    errorMessage,
+    refetch: fetchAll,
+    editProduct,
+    deleteProduct,
+  };
 }

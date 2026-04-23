@@ -4,7 +4,6 @@ import React, { useMemo, useState } from "react";
 import TopBar from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -30,6 +29,7 @@ import EditProduct from "@/components/products/EditProduct";
 
 type ProductRow = {
   id: string;
+  title: string;
   category: string;
   content: string;
   num: number;
@@ -37,7 +37,7 @@ type ProductRow = {
 };
 
 const ProductsPage = () => {
-  const { products, isLoading, errorMessage } = useAdminProducts();
+  const { products, isLoading, errorMessage, refetch } = useAdminProducts();
   const [localProducts, setLocalProducts] = useState<ProductRow[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -47,6 +47,7 @@ const ProductsPage = () => {
       setLocalProducts(
         products.map((p: any) => ({
           id: p.id,
+          title: p.title ?? "",
           category: p.category ?? "",
           content: p.content ?? "",
           num: Number(p.num ?? 0),
@@ -56,10 +57,7 @@ const ProductsPage = () => {
     }
   }, [products, localProducts.length]);
 
-  const totalNum = useMemo(
-    () => localProducts.reduce((sum, p) => sum + p.num, 0),
-    [localProducts],
-  );
+  const totalNum = useMemo(() => localProducts.reduce((sum, p) => sum + p.num, 0), [localProducts]);
 
   return (
     <div className="min-h-screen bg-[var(--off-white)]">
@@ -69,8 +67,8 @@ const ProductsPage = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="font-bold text-black text-center">分類</TableHead>
-                <TableHead className="font-bold text-black text-center">內容</TableHead>
+                <TableHead className="font-bold text-black text-center">地區</TableHead>
+                <TableHead className="font-bold text-black text-center">商品名稱</TableHead>
                 <TableHead className="font-bold text-black text-center">數量</TableHead>
                 <TableHead className="font-bold text-black w-[140px] text-center">啟用</TableHead>
                 <TableHead className="font-bold text-black text-center">操作</TableHead>
@@ -91,39 +89,26 @@ const ProductsPage = () => {
                 </TableRow>
               ) : (
                 localProducts.map((p) => (
-                <TableRow key={p.id}>
-                  <TableCell className="font-medium text-center">{p.category}</TableCell>
-                  <TableCell className="text-center">{p.content}</TableCell>
-                  <TableCell className="text-center">{p.num}</TableCell>
-                  <TableCell className="w-[140px]">
-                    <div className="flex items-center justify-center gap-2">
-                      <Switch
-                        id={`enabled-${p.id}`}
-                        checked={p.is_enabled === 1}
-                        onCheckedChange={(checked) => {
-                          setLocalProducts((prev) =>
-                            prev.map((x) =>
-                              x.id === p.id ? { ...x, is_enabled: checked ? 1 : 0 } : x,
-                            ),
-                          );
-                        }}
-                      />
-                      <Label htmlFor={`enabled-${p.id}`} className="text-xs text-black/60">
-                        {p.is_enabled === 1 ? "啟用" : "停用"}
-                      </Label>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex justify-center gap-2">
-                      <EditIcon
-                        className="w-5 h-5 cursor-pointer"
-                        onClick={() => setEditingId(p.id)}
-                      />
+                  <TableRow key={p.id}>
+                    <TableCell className="font-medium text-center">{p.category}</TableCell>
+                    <TableCell className="text-center">{p.title}</TableCell>
+                    <TableCell className="text-center">{p.num}</TableCell>
+                    <TableCell className="w-[140px]">
+                      <div className="flex items-center justify-center">
+                        <Label>{p.is_enabled === 1 ? "啟用" : "停用"}</Label>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-center gap-2">
+                        <EditIcon
+                          className="w-5 h-5 cursor-pointer"
+                          onClick={() => setEditingId(p.id)}
+                        />
 
-                      <TrashIcon className="w-5 h-5 cursor-pointer" />
-                    </div>
-                  </TableCell>
-                </TableRow>
+                        <TrashIcon className="w-5 h-5 cursor-pointer" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
                 ))
               )}
             </TableBody>
@@ -173,7 +158,14 @@ const ProductsPage = () => {
                 </Button>
               </div>
               <div className="mt-4 max-h-[70vh] overflow-auto">
-                <EditProduct id={editingId} />
+                <EditProduct
+                  id={editingId}
+                  onCancel={() => setEditingId(null)}
+                  onSaved={() => {
+                    setEditingId(null);
+                    refetch();
+                  }}
+                />
               </div>
             </div>
           </div>
