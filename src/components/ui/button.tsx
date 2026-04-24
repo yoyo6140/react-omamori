@@ -8,10 +8,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:opacity-95",
-        default: "bg-[var(--torii-red)] text-white hover:opacity-95",
-        outline: "border border-black/10 bg-white text-[var(--sumi-black)] hover:bg-black/5",
-        ghost: "hover:bg-black/5",
+        primary:
+          "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] font-semibold hover:opacity-95",
+        default: "bg-[var(--torii-red)] text-white font-semibold hover:opacity-95",
+        outline:
+          "border border-black/10 bg-white font-semibold  text-[var(--sumi-black)] hover:bg-black/5",
+        ghost: "font-semibold hover:bg-black/5",
       },
       size: {
         default: "h-10 px-4 py-2",

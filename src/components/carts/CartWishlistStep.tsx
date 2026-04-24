@@ -31,12 +31,12 @@ export default function CartWishlistStep({ items, onRemoveItem, onQuantityChange
             目前沒有商品。你可以回到{" "}
             <Link href="/home" className="text-[var(--torii-red)] underline underline-offset-4">
               首頁
-            </Link>{" "}
+            </Link>
             繼續挑選。
           </div>
         ) : (
-          <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
-            <Table className="min-w-[36rem]">
+          <div className="min-w-0 overflow-x-auto overflow-y-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
+            <Table className="max-w-full">
               <TableHeader>
                 <TableRow>
                   <TableHead className="min-w-[220px] text-center font-bold text-black">

@@ -22,9 +22,9 @@ export default function CartStepTabs({
     ].join(" ");
 
   return (
-    <div className="mb-16 flex justify-center space-x-20 text-xs font-bold uppercase tracking-[0.2em] text-gray-300">
+    <div className="mb-16 flex flex-wrap justify-center gap-x-6 gap-y-4 text-lg font-bold sm:gap-x-10 md:gap-x-16 lg:gap-x-20">
       <button type="button" className={tabClass(step === 1)} onClick={() => onStepChange(1)}>
-        01 願望籃
+        01 願望清單
       </button>
       <button
         type="button"

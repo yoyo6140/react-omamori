@@ -64,16 +64,15 @@ export default function CartsPage() {
     <div className="min-h-screen bg-[var(--off-white)] text-[var(--sumi-black)]">
       <Navbar />
 
-      <main className=" max-w-4xl px-8 py-16">
+      <main className=" mx-auto max-w-4xl px-16 py-16">
         <CartStepTabs
           step={step}
           onStepChange={setStep}
           canGoNextFrom1={canGoNextFrom1}
           canGoNextFrom2={canGoNextFrom2}
         />
-
-        {/* 💡 【修正重點 2】簡化結構：1 是訂單，2 是聯絡資料，3 是總金額 */}
-        <div className="mt-12 space-y-12">
+        {/* 步驟一訂單確認 */}
+        <div className=" mt-12 space-y-12">
           {step === 1 && (
             <CartWishlistStep
               items={items}
@@ -86,6 +85,7 @@ export default function CartsPage() {
             />
           )}
 
+          {/* 步驟二聯絡資料 */}
           {step === 2 && (
             <CartShippingStep
               name={name}
@@ -99,6 +99,7 @@ export default function CartsPage() {
             />
           )}
 
+          {/* 步驟三總金額 */}
           {step === 3 && (
             <CartSummaryPanel
               step={step}
@@ -114,11 +115,11 @@ export default function CartsPage() {
             />
           )}
 
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center justify-between pt-2 gap-4">
             <Button
               type="button"
-              variant="ghost"
-              className="text-xs uppercase tracking-widest text-gray-400 hover:text-[var(--torii-red)]"
+              variant="outline"
+              className="w-full"
               disabled={isPrevDisabled}
               onClick={() => handleStepDelta(-1)}
             >
@@ -127,7 +128,7 @@ export default function CartsPage() {
             {step < 3 ? (
               <Button
                 type="button"
-                className="px-6 text-xs font-bold uppercase tracking-[0.2em]"
+                className="w-full"
                 disabled={isNextDisabled}
                 onClick={() => handleStepDelta(1)}
               >
