@@ -47,8 +47,7 @@ export function useClientProducts() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   async function fetchPage(page = 1, category?: string) {
-    const baseURL =
-      process.env.NEXT_PUBLIC_BASE_URL ?? "https://vue3-course-api.hexschool.io";
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://vue3-course-api.hexschool.io";
     const apiPath = process.env.NEXT_PUBLIC_API_PATH ?? "react-omamori-api";
 
     setIsLoading(true);
@@ -70,8 +69,7 @@ export function useClientProducts() {
   }
 
   async function fetchById(id: string) {
-    const baseURL =
-      process.env.NEXT_PUBLIC_BASE_URL ?? "https://vue3-course-api.hexschool.io";
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://vue3-course-api.hexschool.io";
     const apiPath = process.env.NEXT_PUBLIC_API_PATH ?? "react-omamori-api";
     const url = `${baseURL}/v2/api/${apiPath}${CLIENT_PRODUCT_URL}/${id}`;
     const res = await axios.get<ClientProductResponse>(url);
@@ -93,3 +91,5 @@ export function useClientProducts() {
     fetchById,
   };
 }
+
+//送出訂單post到後端

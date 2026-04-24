@@ -5,4 +5,6 @@ export { default as CartWishlistStep } from "./CartWishlistStep";
 export { default as CartShippingStep } from "./CartShippingStep";
 export { default as CartCheckoutStep } from "./CartCheckoutStep";
 export { default as CartSummaryPanel } from "./CartSummaryPanel";
+export { default as CartPaymentConfirmDialog } from "./CartPaymentConfirmDialog";
+export { default as CartOrderReceiptDialog } from "./CartOrderReceiptDialog";
 export { default as CartStepControls } from "./CartStepControls";

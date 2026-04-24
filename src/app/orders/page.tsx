@@ -27,7 +27,7 @@ import ErrorModal from "@/components/common/ErrorModal";
 import { AdminOrder, useAdminOrders } from "@/hooks/useAdminOrders";
 import { EditOrderModal } from "@/components/orders/EditOrder";
 
-const OrdersPage = () => {
+export default function OrdersPage() {
   const { orders, isLoading, errorMessage, pagination, fetchPage, refetch, deleteOrder } =
     useAdminOrders();
 
@@ -214,6 +214,4 @@ const OrdersPage = () => {
       </div>
     </div>
   );
-};
-
-export default OrdersPage;
+}

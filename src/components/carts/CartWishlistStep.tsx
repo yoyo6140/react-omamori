@@ -17,8 +17,8 @@ const MAX_QTY = 99;
 
 type Props = {
   items: CartItem[];
-  onRemoveItem: (id: string) => void;
-  onQuantityChange: (id: string, quantity: number) => void;
+  onRemoveItem: (id: string) => void | Promise<void>;
+  onQuantityChange: (id: string, quantity: number) => void | Promise<void>;
 };
 
 export default function CartWishlistStep({ items, onRemoveItem, onQuantityChange }: Props) {
@@ -50,7 +50,7 @@ export default function CartWishlistStep({ items, onRemoveItem, onQuantityChange
               </TableHeader>
               <TableBody>
                 {items.map((p) => {
-                  const lineTotal = p.priceJPY * p.quantity;
+                  const lineTotal = p.price * p.qty;
                   return (
                     <TableRow key={p.id}>
                       <TableCell>
@@ -65,15 +65,15 @@ export default function CartWishlistStep({ items, onRemoveItem, onQuantityChange
                           ) : null}
                           <div className="min-w-0">
                             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[var(--torii-red)]">
-                              {p.shrine}
+                              {p.category}
                             </p>
                             <p className="font-bold leading-snug">{p.title}</p>
-                            <p className="mt-0.5 text-xs italic text-gray-400">用途：{p.usage}</p>
+                            <p className="mt-0.5 text-xs italic text-gray-400">內容：{p.content}</p>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell className="text-center font-medium tabular-nums">
-                        {formatJPY(p.priceJPY)}
+                        {formatJPY(p.price)}
                       </TableCell>
                       <TableCell className="text-center font-bold tabular-nums">
                         {formatJPY(lineTotal)}
@@ -87,25 +87,25 @@ export default function CartWishlistStep({ items, onRemoveItem, onQuantityChange
                             className="h-8 w-8 shrink-0 p-0 text-base leading-none"
                             aria-label="減少數量"
                             onClick={() =>
-                              p.quantity <= 1
+                              p.qty <= 1
                                 ? onRemoveItem(p.id)
-                                : onQuantityChange(p.id, p.quantity - 1)
+                                : onQuantityChange(p.id, p.qty - 1)
                             }
                           >
                             −
                           </Button>
                           <span className="min-w-[2rem] text-center font-semibold tabular-nums">
-                            {p.quantity}
+                            {p.qty}
                           </span>
                           <Button
                             type="button"
                             variant="outline"
                             size="sm"
                             className="h-8 w-8 shrink-0 p-0 text-base leading-none"
-                            disabled={p.quantity >= MAX_QTY}
+                            disabled={p.qty >= MAX_QTY}
                             aria-label="增加數量"
                             onClick={() =>
-                              onQuantityChange(p.id, Math.min(MAX_QTY, p.quantity + 1))
+                              onQuantityChange(p.id, Math.min(MAX_QTY, p.qty + 1))
                             }
                           >
                             +

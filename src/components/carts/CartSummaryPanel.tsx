@@ -11,7 +11,8 @@ type Props = {
   shippingJPY: number;
   feeJPY: number;
   totalJPY: number;
-  onConfirmPay: () => void;
+  isSubmitting?: boolean;
+  onConfirmPay: () => void | Promise<void>;
 };
 
 export default function CartSummaryPanel({
@@ -21,6 +22,7 @@ export default function CartSummaryPanel({
   shippingJPY,
   feeJPY,
   totalJPY,
+  isSubmitting = false,
   onConfirmPay,
 }: Props) {
   return (
@@ -48,10 +50,10 @@ export default function CartSummaryPanel({
       <Button
         type="button"
         className="w-full"
-        disabled={itemCount === 0 || step !== 3}
-        onClick={onConfirmPay}
+        disabled={itemCount === 0 || step !== 3 || isSubmitting}
+        onClick={() => void onConfirmPay()}
       >
-        確認結緣並支付
+        {isSubmitting ? "送出中…" : "送出訂單"}
       </Button>
     </div>
   );

@@ -19,10 +19,10 @@ export type OmamoriItem = {
   region: Region;
   locationLabel: string;
   title: string;
-  shrine: string;
-  priceJPY: number;
+  category: string;
+  content: string;
+  price: number;
   description: string;
-  /** 商品主圖（API `imageUrl`） */
   imageUrl?: string;
 };
 
@@ -114,11 +114,11 @@ export default function OmamoriResults({
                                 {item.title}
                               </h4>
                               <p className="text-sm text-[var(--torii-red)] font-medium">
-                                {item.shrine}
+                                {item.content}
                               </p>
                             </div>
                             <span className="text-lg md:text-xl font-bold">
-                              {formatJPY(item.priceJPY)}
+                              {formatJPY(item.price)}
                             </span>
                           </div>
                           <p className="text-sm text-gray-500 leading-relaxed italic overflow-hidden">

@@ -4,42 +4,48 @@ import React, { useMemo, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import {
+  CartOrderReceiptDialog,
+  CartPaymentConfirmDialog,
   CartShippingStep,
   CartStepTabs,
   CartSummaryPanel,
   CartWishlistStep,
-  type CartItem,
+  formatJPY,
   type CartStep,
 } from "@/components/carts";
 import { Button } from "@/components/ui/button";
+import {
+  createCustomerOrder,
+  payCustomerOrder,
+  syncCheckoutCartToServer,
+  useCart,
+} from "@/hooks/useClientCarts";
 
 export default function CartsPage() {
+  const { items, removeItem, setLineQuantity, syncError, clearSyncError, clearCart } =
+    useCart();
   const [step, setStep] = useState<CartStep>(1);
-  const [items, setItems] = useState<CartItem[]>([
-    {
-      id: "kansai-2",
-      shrine: "湊川神社",
-      title: "正成公勝利守",
-      priceJPY: 1200,
-      quantity: 1,
-      imageUrl: "/images/kansai-2.jpg",
-      usage: "學業必勝",
-    },
-  ]);
 
   const shippingJPY = 800;
   const feeJPY = 0;
   const subtotalJPY = useMemo(
-    () => items.reduce((sum, i) => sum + i.priceJPY * i.quantity, 0),
+    () => items.reduce((sum, i) => sum + i.price * i.qty, 0),
     [items],
   );
-  const cartUnitCount = useMemo(() => items.reduce((n, i) => n + i.quantity, 0), [items]);
+  const cartUnitCount = useMemo(() => items.reduce((n, i) => n + i.qty, 0), [items]);
   const totalJPY = subtotalJPY + (items.length > 0 ? shippingJPY : 0) + feeJPY;
 
   const [name, setName] = useState("");
   const [tel, setTel] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+  const [message, setMessage] = useState("");
+  const [orderSubmitting, setOrderSubmitting] = useState(false);
+  const [orderError, setOrderError] = useState<string | null>(null);
+  const [payDialogOrderId, setPayDialogOrderId] = useState<string | null>(null);
+  const [paySubmitting, setPaySubmitting] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
+  const [receiptOrderId, setReceiptOrderId] = useState<string | null>(null);
 
   const canGoNextFrom1 = items.length > 0;
   const canGoNextFrom2 =
@@ -71,31 +77,60 @@ export default function CartsPage() {
           canGoNextFrom1={canGoNextFrom1}
           canGoNextFrom2={canGoNextFrom2}
         />
+        {syncError ? (
+          <div
+            role="alert"
+            className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          >
+            <span>{syncError}</span>
+            <button
+              type="button"
+              className="ml-3 underline underline-offset-2"
+              onClick={clearSyncError}
+            >
+              關閉
+            </button>
+          </div>
+        ) : null}
+        {orderError ? (
+          <div
+            role="alert"
+            className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          >
+            <span>{orderError}</span>
+            <button
+              type="button"
+              className="ml-3 underline underline-offset-2"
+              onClick={() => setOrderError(null)}
+            >
+              關閉
+            </button>
+          </div>
+        ) : null}
         {/* 步驟一訂單確認 */}
         <div className=" mt-12 space-y-12">
           {step === 1 && (
             <CartWishlistStep
               items={items}
-              onRemoveItem={(id) => setItems((prev) => prev.filter((x) => x.id !== id))}
-              onQuantityChange={(id, quantity) =>
-                setItems((prev) =>
-                  prev.map((x) => (x.id === id ? { ...x, quantity: Math.max(1, quantity) } : x)),
-                )
-              }
+              onRemoveItem={removeItem}
+              onQuantityChange={setLineQuantity}
             />
           )}
 
           {/* 步驟二聯絡資料 */}
           {step === 2 && (
             <CartShippingStep
+              items={items}
               name={name}
               tel={tel}
               email={email}
               address={address}
+              message={message}
               onNameChange={setName}
               onTelChange={setTel}
               onEmailChange={setEmail}
               onAddressChange={setAddress}
+              onMessageChange={setMessage}
             />
           )}
 
@@ -108,12 +143,72 @@ export default function CartsPage() {
               shippingJPY={shippingJPY}
               feeJPY={feeJPY}
               totalJPY={totalJPY}
-              onConfirmPay={() => {
-                // 處理付款邏輯
-                console.log("送出訂單");
+              isSubmitting={orderSubmitting}
+              onConfirmPay={async () => {
+                setOrderError(null);
+                setOrderSubmitting(true);
+                try {
+                  await syncCheckoutCartToServer(
+                    items.map((i) => ({ product_id: i.id, qty: i.qty })),
+                  );
+                  const orderId = await createCustomerOrder({
+                    data: {
+                      user: {
+                        name: name.trim(),
+                        email: email.trim(),
+                        tel: tel.trim(),
+                        address: address.trim(),
+                      },
+                      message: message.trim() || "拾守官網結帳",
+                    },
+                  });
+                  setPayError(null);
+                  setPayDialogOrderId(orderId);
+                } catch (e) {
+                  setOrderError(e instanceof Error ? e.message : "訂單處理失敗");
+                } finally {
+                  setOrderSubmitting(false);
+                }
               }}
             />
           )}
+
+          {payDialogOrderId ? (
+            <CartPaymentConfirmDialog
+              orderId={payDialogOrderId}
+              totalFormatted={formatJPY(totalJPY)}
+              isPaying={paySubmitting}
+              payError={payError}
+              onCancel={() => {
+                if (paySubmitting) return;
+                setPayDialogOrderId(null);
+                setPayError(null);
+              }}
+              onConfirmPay={async () => {
+                if (!payDialogOrderId) return;
+                setPayError(null);
+                setPaySubmitting(true);
+                try {
+                  const paidId = payDialogOrderId;
+                  await payCustomerOrder(paidId);
+                  clearCart();
+                  setPayDialogOrderId(null);
+                  setReceiptOrderId(paidId);
+                } catch (e) {
+                  setPayError(e instanceof Error ? e.message : "付款失敗");
+                } finally {
+                  setPaySubmitting(false);
+                }
+              }}
+            />
+          ) : null}
+
+          {receiptOrderId ? (
+            <CartOrderReceiptDialog
+              orderId={receiptOrderId}
+              onClose={() => setReceiptOrderId(null)}
+            />
+          ) : null}
 
           <div className="flex items-center justify-between pt-2 gap-4">
             <Button

@@ -43,25 +43,17 @@ export default function WishesSection({ onPick }: { onPick?: () => void }) {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-16">
           {wishes.map(({ title, subtitle, Icon, tint, hover }) => (
-            <button
-              key={title}
-              type="button"
-              onClick={onPick}
-              className="group text-center p-8 md:p-12 border border-gray-100 hover:border-[var(--gold)] transition-all duration-700 bg-white/60"
-            >
+            <div key={title} className="group text-center p-8 md:p-12 border border-gray-100 ">
               <div
-                className={[
-                  "w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 transition-all",
-                  tint,
-                  hover,
-                  "group-hover:text-white",
-                ].join(" ")}
+                className={
+                  "w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 transition-all"
+                }
               >
                 <Icon className="w-8 h-8" />
               </div>
               <h3 className="text-xl font-bold mb-2 font-serif">{title}</h3>
               <p className="text-xs text-gray-400 tracking-widest">{subtitle}</p>
-            </button>
+            </div>
           ))}
         </div>
       </div>

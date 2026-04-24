@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Search, ShoppingBag, Menu, X } from "lucide-react";
+import { useCart } from "@/hooks/useClientCarts";
 
 const Navbar = () => {
+  const { cartUnitCount } = useCart();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -19,6 +21,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "尋找祝福", href: "/home" },
     { name: "御守地圖", href: "/home#omamori-results" },
+    { name: "結緣查詢", href: "/check" },
   ];
 
   return (
@@ -49,10 +52,18 @@ const Navbar = () => {
 
         {/* Icons Area */}
         <div className="flex items-center space-x-6 text-[#1A1A1A] ml-auto">
-          <Link href="/carts" className="relative cursor-pointer group">
+          <Link
+            href="/carts"
+            className="relative cursor-pointer group"
+            aria-label={`購物車，共 ${cartUnitCount} 件商品`}
+          >
             <ShoppingBag className="w-8 h-8 group-hover:text-[#B22222] transition-colors" />
-            <span className="absolute -top-2 -right-2 bg-[#B22222] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
-              0
+            <span
+              className={`absolute -top-2 -right-2 flex min-h-4 min-w-4 items-center justify-center rounded-full bg-[#B22222] px-1 text-[10px] font-semibold leading-none text-white ${
+                cartUnitCount === 0 ? "opacity-70" : ""
+              }`}
+            >
+              {cartUnitCount > 99 ? "99+" : cartUnitCount}
             </span>
           </Link>
 

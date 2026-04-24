@@ -47,15 +47,15 @@ export default function CartCheckoutStep({ items, name, tel, email, address }: P
               <div key={p.id} className="flex items-center justify-between gap-4">
                 <div className="min-w-0">
                   <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--torii-red)]">
-                    {p.shrine}
+                    {p.category}
                   </div>
                   <div className="truncate font-semibold">{p.title}</div>
-                  <div className="text-xs italic text-gray-400">用途：{p.usage}</div>
+                  <div className="text-xs italic text-gray-400">內容：{p.content}</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-bold">{formatJPY(p.priceJPY * p.quantity)}</div>
+                  <div className="font-bold">{formatJPY(p.price * p.qty)}</div>
                   <div className="text-xs text-gray-400">
-                    {formatJPY(p.priceJPY)} × {p.quantity}
+                    {formatJPY(p.price)} × {p.qty}
                   </div>
                 </div>
               </div>

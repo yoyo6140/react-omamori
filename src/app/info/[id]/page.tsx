@@ -1,23 +1,9 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import { MapPin, Minus, Plus } from "lucide-react";
+import { MapPin } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-type ApiProduct = {
-  id: string;
-  title: string;
-  category?: string;
-  content?: string;
-  description?: string;
-  price?: number;
-  origin_price?: number;
-  unit?: string;
-  num?: number;
-  is_enabled?: 0 | 1;
-  imageUrl?: string;
-  imagesUrl?: string[];
-};
+import InfoProductActions from "@/components/info/InfoProductActions";
+import type { ApiProduct } from "@/hooks/useClientCarts";
 
 function formatJPY(n: number) {
   return `¥${n.toLocaleString("ja-JP")}`;
@@ -40,8 +26,7 @@ export default async function InfoPage({ params }: { params: Promise<{ id: strin
   const product = await getProductById(id);
   if (!product?.id) return notFound();
 
-  const shrineLine = [product.category, product.content].filter(Boolean).join("・") || "—";
-  const priceJPY = Number(product.price ?? 0);
+  const price = Number(product.price ?? 0);
   const stock = Number(product.num ?? 0);
 
   return (
@@ -96,7 +81,7 @@ export default async function InfoPage({ params }: { params: Promise<{ id: strin
                 {product.title}
               </h1>
               <p className="mb-6 text-2xl font-light text-gray-500">
-                {formatJPY(priceJPY)}
+                {formatJPY(price)}
                 <span className="ml-2 text-sm text-gray-400">（含稅）</span>
               </p>
               <div className="flex flex-wrap  text-xl gap-4">
@@ -122,28 +107,17 @@ export default async function InfoPage({ params }: { params: Promise<{ id: strin
                 </div>
               </div>
 
-              <div className="pt-8">
-                <div className=" mb-8 flex flex-wrap items-center gap-6">
-                  <div className="flex items-center rounded-sm border border-gray-200">
-                    <button type="button" className="px-4 py-2 transition hover:bg-gray-100">
-                      <Minus className="w-6 h-6 cursor-pointer" />
-                    </button>
-                    <span className="border-x border-gray-200 px-6 py-2">1</span>
-                    <button type="button" className="px-4 py-2 transition hover:bg-gray-100">
-                      <Plus className="w-6 h-6 cursor-pointer" />
-                    </button>
-                  </div>
-                  <p className=" italic text-gray-400">庫存僅剩 {product.num} 枚</p>
-                </div>
-                <Button className="w-full">
-                  <Link
-                    href="/carts"
-                    className="block w-full bg-[var(--torii-red)] py-5 text-center text-sm font-bold uppercase tracking-widest text-white shadow-lg transition hover:opacity-90"
-                  >
-                    立即結緣
-                  </Link>
-                </Button>
-              </div>
+              <InfoProductActions
+                productId={String(product.id)}
+                category={product.category ?? "—"}
+                title={product.title ?? ""}
+                content={product.content ?? ""}
+                price={price}
+                imageUrl={product.imageUrl ?? ""}
+                stock={stock}
+                description={product.description}
+                unit={product.unit}
+              />
             </div>
           </div>
         </div>
