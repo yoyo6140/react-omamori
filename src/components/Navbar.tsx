@@ -17,8 +17,8 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: "尋找祝福", href: "#wishes" },
-    { name: "御守地圖", href: "#map" },
+    { name: "尋找祝福", href: "/home" },
+    { name: "御守地圖", href: "/home#omamori-results" },
   ];
 
   return (
@@ -36,14 +36,14 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-12 tracking-[0.2em] uppercase font-light ml-auto">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.name}
               href={link.href}
               className="hover:text-[#B22222] transition-colors duration-300 relative group"
             >
               {link.name}
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#B22222] transition-all duration-300 group-hover:w-full"></span>
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -67,14 +67,14 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="absolute top-full left-0 w-full bg-white border-t md:hidden flex flex-col p-8 space-y-6 shadow-xl animate-in fade-in slide-in-from-top-4">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.name}
               href={link.href}
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-lg tracking-widest hover:text-[#B22222]"
             >
               {link.name}
-            </a>
+            </Link>
           ))}
         </div>
       )}

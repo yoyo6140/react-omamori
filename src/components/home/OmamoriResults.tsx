@@ -11,8 +11,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-export type Region = "關東" | "關西" | "九州" | "北海道";
-const REGIONS: Region[] = ["關東", "關西", "九州", "北海道"];
+export type Region = "關東" | "關西" | "九州" | "北海道" | "其他";
+const REGIONS: Region[] = ["關東", "關西", "九州", "北海道", "其他"];
 
 export type OmamoriItem = {
   id: string;
@@ -22,6 +22,8 @@ export type OmamoriItem = {
   shrine: string;
   priceJPY: number;
   description: string;
+  /** 商品主圖（API `imageUrl`） */
+  imageUrl?: string;
 };
 
 function formatJPY(n: number) {
@@ -87,14 +89,22 @@ export default function OmamoriResults({
             {visibleItems.map((item) => (
               <CarouselItem key={item.id} className="basis-full sm:basis-1/3 lg:basis-1/4">
                 <div className="mx-[10px]">
-                  <Link href={`/home/info/${item.id}`} className="block">
+                  <Link href={`/info/${item.id}`} className="block">
                     <Card className="border-t-4 border-t-[var(--torii-red)] h-[420px] sm:h-[430px] md:h-[460px] hover:shadow-md transition">
                       <CardContent className="p-4 md:p-5 h-full flex flex-col">
                         <div className="bg-gray-50 mb-4 overflow-hidden relative group rounded-lg h-44 sm:h-52 md:h-[260px]">
-                          <div className="absolute top-4 right-4 px-3 py-1 bg-[var(--torii-red)] text-white text-[10px] tracking-widest">
+                          <div className="absolute top-4 right-4 z-10 px-3 py-1 bg-[var(--torii-red)] text-white text-[10px] tracking-widest">
                             {item.locationLabel}
                           </div>
-                          <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-50 transition duration-700 group-hover:scale-[1.02]" />
+                          {item.imageUrl ? (
+                            <img
+                              src={item.imageUrl}
+                              alt={item.title}
+                              className="w-full h-full object-cover transition duration-700 group-hover:scale-[1.02]"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-50 transition duration-700 group-hover:scale-[1.02]" />
+                          )}
                         </div>
 
                         <div className="space-y-4 flex-1 min-h-0">
