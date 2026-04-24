@@ -181,8 +181,13 @@ export default function CartsPage() {
               payError={payError}
               onCancel={() => {
                 if (paySubmitting) return;
+                const id = payDialogOrderId;
                 setPayDialogOrderId(null);
                 setPayError(null);
+                if (id) {
+                  clearCart();
+                  setReceiptOrderId(id);
+                }
               }}
               onConfirmPay={async () => {
                 if (!payDialogOrderId) return;

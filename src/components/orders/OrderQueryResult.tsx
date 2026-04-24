@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import CartPaymentConfirmDialog from "@/components/carts/CartPaymentConfirmDialog";
 import { formatJPY } from "@/components/carts/format-jpy";
 import type { CustomerOrderDetail } from "@/hooks/useClientCarts";
 
@@ -32,6 +34,12 @@ export default function OrderQueryResult({
   const orderNum = typeof detail.num === "number" ? detail.num : undefined;
   const unpaid = detail.is_paid !== true;
 
+  const [payConfirmOpen, setPayConfirmOpen] = useState(false);
+
+  useEffect(() => {
+    if (detail.is_paid === true) setPayConfirmOpen(false);
+  }, [detail.is_paid]);
+
   return (
     <div className="space-y-6 text-sm">
       <div className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm">
@@ -57,7 +65,7 @@ export default function OrderQueryResult({
               type="button"
               size="sm"
               disabled={payLoading}
-              onClick={() => void onPay()}
+              onClick={() => setPayConfirmOpen(true)}
             >
               {payLoading ? "付款處理中…" : "立即付款"}
             </Button>
@@ -154,6 +162,20 @@ export default function OrderQueryResult({
             </div>
           ) : null}
         </div>
+      ) : null}
+
+      {payConfirmOpen && unpaid && onPay ? (
+        <CartPaymentConfirmDialog
+          orderId={displayId}
+          orderIdLeadText="訂單編號："
+          totalFormatted={total != null ? formatJPY(total) : undefined}
+          isPaying={payLoading}
+          payError={payError ?? null}
+          onCancel={() => setPayConfirmOpen(false)}
+          onConfirmPay={async () => {
+            await onPay();
+          }}
+        />
       ) : null}
     </div>
   );

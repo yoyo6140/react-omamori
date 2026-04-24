@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import type { CartItem } from "./types";
 import { formatJPY } from "./format-jpy";
+import { TrashIcon } from "lucide-react";
 
 const MAX_QTY = 99;
 
@@ -45,7 +46,7 @@ export default function CartWishlistStep({ items, onRemoveItem, onQuantityChange
                   <TableHead className="w-24 text-center font-bold text-black">單價</TableHead>
                   <TableHead className="w-28 text-center font-bold text-black">小計</TableHead>
                   <TableHead className="w-40 text-center font-bold text-black">數量</TableHead>
-                  <TableHead className="w-20 text-center font-bold text-black">操作</TableHead>
+                  <TableHead className="w-20 font-bold text-black">操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -87,9 +88,7 @@ export default function CartWishlistStep({ items, onRemoveItem, onQuantityChange
                             className="h-8 w-8 shrink-0 p-0 text-base leading-none"
                             aria-label="減少數量"
                             onClick={() =>
-                              p.qty <= 1
-                                ? onRemoveItem(p.id)
-                                : onQuantityChange(p.id, p.qty - 1)
+                              p.qty <= 1 ? onRemoveItem(p.id) : onQuantityChange(p.id, p.qty - 1)
                             }
                           >
                             −
@@ -104,9 +103,7 @@ export default function CartWishlistStep({ items, onRemoveItem, onQuantityChange
                             className="h-8 w-8 shrink-0 p-0 text-base leading-none"
                             disabled={p.qty >= MAX_QTY}
                             aria-label="增加數量"
-                            onClick={() =>
-                              onQuantityChange(p.id, Math.min(MAX_QTY, p.qty + 1))
-                            }
+                            onClick={() => onQuantityChange(p.id, Math.min(MAX_QTY, p.qty + 1))}
                           >
                             +
                           </Button>
@@ -115,10 +112,10 @@ export default function CartWishlistStep({ items, onRemoveItem, onQuantityChange
                       <TableCell className="text-right">
                         <button
                           type="button"
-                          className="text-[10px] uppercase tracking-widest text-gray-400 transition hover:text-red-500"
+                          className="flex items-center justify-center cursor-pointer hover:text-red-500"
                           onClick={() => onRemoveItem(p.id)}
                         >
-                          移除
+                          <TrashIcon className="w-6 h-6" />
                         </button>
                       </TableCell>
                     </TableRow>
