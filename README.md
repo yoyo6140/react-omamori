@@ -59,7 +59,7 @@ react-omamori/
 
 ## 開發環境
 
-- Node.js（建議 18+）
+- Node.js（建議 20+）
 - npm
 
 ## 安裝與啟動
@@ -83,6 +83,32 @@ NEXT_PUBLIC_API_PATH=react-omamori-api
 ```
 
 客戶端購物車／訂單／付款 API 基底為：`{NEXT_PUBLIC_BASE_URL}/v2/api/{NEXT_PUBLIC_API_PATH}/...`
+
+## Vercel 自動化部署（GitHub Actions）
+
+本專案已包含 Vercel 自動部署設定檔：
+
+- `vercel.json`：指定 Next.js 專案的安裝／建置指令
+- `.github/workflows/vercel.yml`：
+  - **Pull Request**：自動部署 **Preview**
+  - **push 到 `main`**：自動部署 **Production**
+
+### 需要的 GitHub Secrets
+
+請到 GitHub Repo → Settings → Secrets and variables → Actions，新增以下 3 個 Secrets：
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+> 小提示：你可以在本機執行 `vercel link` 後從 `.vercel/project.json` 取得 `orgId` / `projectId`，再把值貼到 GitHub Secrets。請勿把 `.vercel/` 提交進 repo。
+
+### Vercel 環境變數
+
+Vercel 專案中也需要設定（Preview / Production 兩個環境都建議設定）：
+
+- `NEXT_PUBLIC_BASE_URL`
+- `NEXT_PUBLIC_API_PATH`
 
 ## 登入與 Token
 
