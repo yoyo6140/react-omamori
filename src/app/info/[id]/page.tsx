@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { MapPin } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Navbar from "@/components/common/Navbar";
+import Footer from "@/components/common/Footer";
 import InfoProductActions from "@/components/info/InfoProductActions";
 import type { ApiProduct } from "@/hooks/useClientCarts";
 

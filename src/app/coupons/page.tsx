@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import TopBar from "@/components/TopBar";
+import TopBar from "@/components/common/TopBar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -87,7 +87,10 @@ const CouponsPage = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-center gap-2">
-                        <EditIcon className="w-5 h-5 cursor-pointer" onClick={() => setEditingCoupon(c)} />
+                        <EditIcon
+                          className="w-5 h-5 cursor-pointer"
+                          onClick={() => setEditingCoupon(c)}
+                        />
                         <TrashIcon
                           className="w-5 h-5 cursor-pointer"
                           onClick={() => {
@@ -176,4 +179,3 @@ const CouponsPage = () => {
 };
 
 export default CouponsPage;
-

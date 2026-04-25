@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import TopBar from "@/components/TopBar";
+import TopBar from "@/components/common/TopBar";
 import { Label } from "@/components/ui/label";
 import {
   Table,
@@ -79,11 +79,16 @@ export default function OrdersPage() {
                     </TableCell>
                     <TableCell className="text-center">{o.user?.name}</TableCell>
                     <TableCell className="text-center">
-                      <Label className="text-xs text-black/60">{o.is_paid ? "已付款" : "未付款"}</Label>
+                      <Label className="text-xs text-black/60">
+                        {o.is_paid ? "已付款" : "未付款"}
+                      </Label>
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-center gap-2">
-                        <EditIcon className="w-5 h-5 cursor-pointer" onClick={() => setEditingOrder(o)} />
+                        <EditIcon
+                          className="w-5 h-5 cursor-pointer"
+                          onClick={() => setEditingOrder(o)}
+                        />
                         <TrashIcon
                           className="w-5 h-5 cursor-pointer"
                           onClick={() => {

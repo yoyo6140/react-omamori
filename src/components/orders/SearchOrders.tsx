@@ -15,7 +15,7 @@ type Props = {
   payError?: string | null;
 };
 
-export default function OrderQueryResult({
+export default function SearchOrders({
   detail,
   apiOrderId,
   onPay,
@@ -31,7 +31,6 @@ export default function OrderQueryResult({
         ? detail.final_total
         : undefined;
   const displayId = detail.id ?? apiOrderId;
-  const orderNum = typeof detail.num === "number" ? detail.num : undefined;
   const unpaid = detail.is_paid !== true;
 
   const [payConfirmOpen, setPayConfirmOpen] = useState(false);
@@ -43,13 +42,8 @@ export default function OrderQueryResult({
   return (
     <div className="space-y-6 text-sm">
       <div className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm">
-        <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-black/45">
-          訂單編號
-        </div>
+        <div className="mb-2 text-[20px] font-bold text-[var(--sumi-black)]">訂單編號</div>
         <div className="font-mono font-semibold text-[var(--sumi-black)]">{displayId}</div>
-        {orderNum != null ? (
-          <div className="mt-2 text-xs text-black/55">序號：{orderNum}</div>
-        ) : null}
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <span
             className={
@@ -83,31 +77,29 @@ export default function OrderQueryResult({
 
       {user && typeof user === "object" ? (
         <div className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm">
-          <div className="mb-3 text-[10px] font-bold uppercase tracking-widest text-black/45">
-            收件資料
-          </div>
+          <div className="mb-3 text-[20px] font-bold text-[var(--sumi-black)]">收件資料</div>
           <ul className="space-y-2 text-black/80">
             {typeof user.name === "string" && user.name ? (
               <li>
-                <span className="text-black/50">姓名：</span>
+                <span>姓名：</span>
                 {user.name}
               </li>
             ) : null}
             {typeof user.tel === "string" && user.tel ? (
               <li>
-                <span className="text-black/50">電話：</span>
+                <span>電話：</span>
                 {user.tel}
               </li>
             ) : null}
             {typeof user.email === "string" && user.email ? (
               <li className="break-all">
-                <span className="text-black/50">Email：</span>
+                <span>Email：</span>
                 {user.email}
               </li>
             ) : null}
             {typeof user.address === "string" && user.address ? (
               <li className="break-words">
-                <span className="text-black/50">地址：</span>
+                <span>地址：</span>
                 {user.address}
               </li>
             ) : null}
@@ -117,18 +109,14 @@ export default function OrderQueryResult({
 
       {typeof detail.message === "string" && detail.message ? (
         <div className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm">
-          <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-black/45">
-            留言
-          </div>
+          <div className="mb-1 text-[20px] font-bold text-[var(--sumi-black)]">留言</div>
           <p className="text-black/75">{detail.message}</p>
         </div>
       ) : null}
 
       {products.length > 0 ? (
         <div className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm">
-          <div className="mb-3 text-[10px] font-bold uppercase tracking-widest text-black/45">
-            商品明細
-          </div>
+          <div className="mb-3 text-[20px] font-bold text-[var(--sumi-black)]">商品明細</div>
           <ul className="space-y-3">
             {products.map((line, idx) => {
               const p = line.product;
@@ -136,8 +124,7 @@ export default function OrderQueryResult({
                 p && typeof p === "object" && typeof p.title === "string"
                   ? p.title
                   : (typeof line.product_id === "string" && line.product_id) || `品項 ${idx + 1}`;
-              const price =
-                p && typeof p === "object" && typeof p.price === "number" ? p.price : 0;
+              const price = p && typeof p === "object" && typeof p.price === "number" ? p.price : 0;
               const qty = typeof line.qty === "number" ? line.qty : 1;
               return (
                 <li
@@ -180,3 +167,4 @@ export default function OrderQueryResult({
     </div>
   );
 }
+

@@ -87,12 +87,12 @@ export default function OmamoriResults({
         <Carousel opts={{ align: "start" }} className="w-full">
           <CarouselContent>
             {visibleItems.map((item) => (
-              <CarouselItem key={item.id} className="basis-full sm:basis-1/3 lg:basis-1/4">
-                <div className="mx-[10px]">
+              <CarouselItem key={item.id} className="basis-1/2 sm:basis-1/3 lg:basis-1/4">
+                <div className="px-2">
                   <Link href={`/info/${item.id}`} className="block">
-                    <Card className="border-t-4 border-t-[var(--torii-red)] h-[420px] sm:h-[430px] md:h-[460px] hover:shadow-md transition">
-                      <CardContent className="p-4 md:p-5 h-full flex flex-col">
-                        <div className="bg-gray-50 mb-4 overflow-hidden relative group rounded-lg h-44 sm:h-52 md:h-[260px]">
+                    <Card className="border-t-4 border-t-[var(--torii-red)] h-[340px] sm:h-[430px] md:h-[460px] hover:shadow-md transition">
+                      <CardContent className="p-3 sm:p-4 md:p-5 h-full flex flex-col">
+                        <div className="bg-gray-50 mb-3 sm:mb-4 overflow-hidden relative group rounded-lg h-32 sm:h-52 md:h-[260px]">
                           <div className="absolute top-4 right-4 z-10 px-3 py-1 bg-[var(--torii-red)] text-white text-[10px] tracking-widest">
                             {item.locationLabel}
                           </div>
@@ -107,21 +107,21 @@ export default function OmamoriResults({
                           )}
                         </div>
 
-                        <div className="space-y-4 flex-1 min-h-0">
-                          <div className="flex justify-between items-start gap-6">
-                            <div>
-                              <h4 className="text-xl md:text-2xl font-bold font-serif">
+                        <div className="space-y-3 sm:space-y-4 flex-1 min-h-0">
+                          <div className="flex justify-between items-start gap-3 sm:gap-6">
+                            <div className="min-w-0">
+                              <h4 className="text-lg sm:text-xl md:text-2xl font-bold font-serif truncate">
                                 {item.title}
                               </h4>
-                              <p className="text-sm text-[var(--torii-red)] font-medium">
+                              <p className="text-xs sm:text-sm text-[var(--torii-red)] font-medium truncate">
                                 {item.content}
                               </p>
                             </div>
-                            <span className="text-lg md:text-xl font-bold">
+                            <span className="shrink-0 text-base sm:text-lg md:text-xl font-bold">
                               {formatJPY(item.price)}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-500 leading-relaxed italic overflow-hidden">
+                          <p className="text-xs sm:text-sm text-gray-500 leading-relaxed italic overflow-hidden">
                             {item.description}
                           </p>
                         </div>
@@ -132,8 +132,8 @@ export default function OmamoriResults({
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="inline-flex h-9 w-9 md:h-10 md:w-10" />
-          <CarouselNext className="inline-flex h-9 w-9 md:h-10 md:w-10" />
+          <CarouselPrevious className="inline-flex h-9 w-9 md:h-10 md:w-10 cursor-pointer" />
+          <CarouselNext className="inline-flex h-9 w-9 md:h-10 md:w-10 cursor-pointer" />
         </Carousel>
       </div>
     </section>

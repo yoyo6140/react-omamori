@@ -68,7 +68,10 @@ const Navbar = () => {
           </Link>
 
           {/* Mobile Menu Toggle */}
-          <div className="md:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <div
+            className="md:hidden cursor-pointer"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
             {isMobileMenuOpen ? <X /> : <Menu />}
           </div>
         </div>

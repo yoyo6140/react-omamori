@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { useRouter } from "next/navigation";
+import Navbar from "@/components/common/Navbar";
+import Footer from "@/components/common/Footer";
 import {
   CartOrderReceiptDialog,
   CartPaymentConfirmDialog,
@@ -22,16 +23,13 @@ import {
 } from "@/hooks/useClientCarts";
 
 export default function CartsPage() {
-  const { items, removeItem, setLineQuantity, syncError, clearSyncError, clearCart } =
-    useCart();
+  const router = useRouter();
+  const { items, removeItem, setLineQuantity, syncError, clearSyncError, clearCart } = useCart();
   const [step, setStep] = useState<CartStep>(1);
 
   const shippingJPY = 800;
   const feeJPY = 0;
-  const subtotalJPY = useMemo(
-    () => items.reduce((sum, i) => sum + i.price * i.qty, 0),
-    [items],
-  );
+  const subtotalJPY = useMemo(() => items.reduce((sum, i) => sum + i.price * i.qty, 0), [items]);
   const cartUnitCount = useMemo(() => items.reduce((n, i) => n + i.qty, 0), [items]);
   const totalJPY = subtotalJPY + (items.length > 0 ? shippingJPY : 0) + feeJPY;
 
@@ -211,7 +209,10 @@ export default function CartsPage() {
           {receiptOrderId ? (
             <CartOrderReceiptDialog
               orderId={receiptOrderId}
-              onClose={() => setReceiptOrderId(null)}
+              onClose={() => {
+                setReceiptOrderId(null);
+                router.push("/home");
+              }}
             />
           ) : null}
 

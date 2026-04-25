@@ -4,9 +4,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import SuccessModal from "@/components/common/SuccessModal";
 import ErrorModal from "@/components/common/ErrorModal";
@@ -77,9 +79,16 @@ export default function EditOrder({
   async function handleSubmit() {
     setIsSaving(true);
     try {
-      const updated = await editOrder(order.id, {
-        ...form,
-      });
+      const payload: Partial<AdminOrder> = {
+        create_at: form.create_at,
+        is_paid: Boolean(form.is_paid),
+        message: form.message,
+        products: form.products,
+        user: form.user,
+        num: form.num,
+      };
+
+      const updated = await editOrder(order.id, payload);
       setForm(updated ?? form);
       setIsSuccessOpen(true);
     } catch {
@@ -117,26 +126,101 @@ export default function EditOrder({
               <div className="space-y-2">
                 <Label className="font-bold text-black">訂單編號</Label>
                 <div className="rounded-md border border-black/10 bg-black/[0.02] px-3 py-2 text-sm break-all">
-                  {order.id}
+                  {form.id}
                 </div>
               </div>
               <div className="space-y-2">
                 <Label className="font-bold text-black">建立時間</Label>
                 <div className="rounded-md border border-black/10 bg-black/[0.02] px-3 py-2 text-sm">
-                  {new Date(order.create_at * 1000).toLocaleString()}
+                  {new Date((form.create_at ?? 0) * 1000).toLocaleString()}
                 </div>
               </div>
               <div className="space-y-2">
                 <Label className="font-bold text-black">收件人</Label>
-                <div className="rounded-md border border-black/10 bg-black/[0.02] px-3 py-2 text-sm">
-                  {order.user?.name}
-                </div>
+                <Input
+                  required
+                  value={form.user?.name ?? ""}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      user: { ...(prev.user ?? {}), name: e.target.value },
+                    }))
+                  }
+                />
               </div>
               <div className="space-y-2">
                 <Label className="font-bold text-black">Email</Label>
-                <div className="rounded-md border border-black/10 bg-black/[0.02] px-3 py-2 text-sm break-all">
-                  {order.user?.email}
-                </div>
+                <Input
+                  required
+                  type="email"
+                  value={form.user?.email ?? ""}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      user: { ...(prev.user ?? {}), email: e.target.value },
+                    }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-bold text-black">電話</Label>
+                <Input
+                  required
+                  value={form.user?.tel ?? ""}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      user: { ...(prev.user ?? {}), tel: e.target.value },
+                    }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-bold text-black">地址</Label>
+                <Input
+                  required
+                  value={form.user?.address ?? ""}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      user: { ...(prev.user ?? {}), address: e.target.value },
+                    }))
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-2">
+              <Label className="font-bold text-black">商品明細</Label>
+              <div className="rounded-xl border border-black/10 overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-center font-bold text-black">商品</TableHead>
+                      <TableHead className="text-center font-bold text-black">數量</TableHead>
+                      <TableHead className="text-center font-bold text-black">小計</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {Object.values(form.products ?? {}).length ? (
+                      Object.values(form.products ?? {}).map((item: any) => (
+                        <TableRow key={item.id ?? item.product_id}>
+                          <TableCell className="text-center">
+                            {item.product?.title ?? item.product_id}
+                          </TableCell>
+                          <TableCell className="text-center">{item.qty}</TableCell>
+                          <TableCell className="text-center">{item.total ?? item.final_total ?? "-"}</TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={3} className="text-center text-black/60">
+                          無商品資料
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
               </div>
             </div>
 

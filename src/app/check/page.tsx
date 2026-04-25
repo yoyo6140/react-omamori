@@ -2,11 +2,11 @@
 
 import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Navbar from "@/components/common/Navbar";
+import Footer from "@/components/common/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import OrderQueryResult from "@/components/orders/OrderQueryResult";
+import SearchOrders from "@/components/orders/SearchOrders";
 import {
   fetchCustomerOrder,
   payCustomerOrder,
@@ -121,7 +121,7 @@ function CheckOrderContent() {
 
         {detail && resolvedOrderId ? (
           <div className="mt-10">
-            <OrderQueryResult
+            <SearchOrders
               detail={detail}
               apiOrderId={resolvedOrderId}
               onPay={detail.is_paid === true ? undefined : handlePay}

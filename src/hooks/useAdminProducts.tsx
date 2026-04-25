@@ -53,6 +53,8 @@ export function useAdminProducts() {
   async function fetchAll() {
     setIsLoading(true);
     setErrorMessage(null);
+    // 避免在重新抓取時短暫顯示舊資料
+    setProducts([]);
 
     try {
       const url = `${baseURL}/v2/api/${apiPath}${ADMIN_GET_PRODUCTS_ALL_URL}`;
@@ -77,12 +79,10 @@ export function useAdminProducts() {
   }
 
   async function fetchPage(page = 1) {
-    const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
-    const apiPath = process.env.NEXT_PUBLIC_API_PATH;
-    const token = Cookies.get("access_token");
-
     setIsLoading(true);
     setErrorMessage(null);
+    // 切頁時先清空，確保畫面只顯示 API 回來的那頁資料
+    setProducts([]);
 
     try {
       const url = `${baseURL}/v2/api/${apiPath}${ADMIN_SEARCH_PRODUCT_ALL_URL}?page=${page}`;

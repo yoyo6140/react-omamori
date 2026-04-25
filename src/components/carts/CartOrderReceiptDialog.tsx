@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  fetchCustomerOrder,
-  type CustomerOrderDetail,
-} from "@/hooks/useClientCarts";
+import { fetchCustomerOrder, type CustomerOrderDetail } from "@/hooks/useClientCarts";
 import { formatJPY } from "./format-jpy";
 
 type Props = {
