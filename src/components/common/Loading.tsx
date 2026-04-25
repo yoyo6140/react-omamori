@@ -3,25 +3,13 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type LoadingProps = {
-  /**
-   * 顯示在轉圈圈下方的文字（可省略）。
-   */
   label?: string | null;
-  /**
-   * 是否覆蓋整個畫面並置中顯示（常用於頁面載入）。
-   */
   fullScreen?: boolean;
-  /**
-   * 轉圈圈大小（px）。
-   */
   size?: number;
   className?: string;
 };
 
-export function LoadingSpinner({
-  size = 24,
-  className,
-}: Pick<LoadingProps, "size" | "className">) {
+export function LoadingSpinner({ size = 24, className }: Pick<LoadingProps, "size" | "className">) {
   return (
     <Loader2
       aria-hidden="true"
@@ -52,4 +40,3 @@ export default function Loading({
     </div>
   );
 }
-

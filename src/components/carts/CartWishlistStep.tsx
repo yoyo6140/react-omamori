@@ -50,7 +50,6 @@ export default function CartWishlistStep({ items, onRemoveItem, onQuantityChange
               </TableHeader>
               <TableBody>
                 {items.map((p) => {
-                  const lineTotal = p.price * p.qty;
                   return (
                     <TableRow key={p.id}>
                       <TableCell>
@@ -76,7 +75,7 @@ export default function CartWishlistStep({ items, onRemoveItem, onQuantityChange
                         {p.price}元
                       </TableCell>
                       <TableCell className="text-center font-bold tabular-nums">
-                        {lineTotal}元
+                        {p.price * p.qty}元
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-center gap-1">

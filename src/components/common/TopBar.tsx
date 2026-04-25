@@ -20,7 +20,7 @@ export default function TopBar() {
   const navLinks: TopBarLink[] = [
     { name: "商品", href: "/products" },
     { name: "訂單", href: "/orders" },
-    { name: "優惠券", href: "/coupons" },
+    // { name: "優惠券", href: "/coupons" },
   ];
 
   return (

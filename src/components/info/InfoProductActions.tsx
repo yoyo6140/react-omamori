@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useClientCarts";
+import SuccessModal from "@/components/common/SuccessModal";
+import ErrorModal from "@/components/common/ErrorModal";
 
 type Props = {
   productId: string;
@@ -29,28 +30,40 @@ export default function InfoProductActions({
   description,
   unit,
 }: Props) {
-  const router = useRouter();
   const { addItem } = useCart();
   const maxBuy = Math.max(0, stock);
   const [qty, setQty] = useState(1);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [isErrorOpen, setIsErrorOpen] = useState(false);
 
   const dec = () => setQty((q) => Math.max(1, q - 1));
   const inc = () => setQty((q) => (maxBuy > 0 ? Math.min(maxBuy, q + 1) : q));
 
   const handleAdd = async () => {
     if (maxBuy <= 0) return;
-    await addItem({
-      id: productId,
-      category,
-      title,
-      content,
-      price,
-      imageUrl,
-      qty,
-      maxStock: maxBuy,
-      description: description?.trim() || undefined,
-      unit: unit?.trim() || undefined,
-    });
+    if (isAdding) return;
+    setIsAdding(true);
+    try {
+      await addItem({
+        id: productId,
+        category,
+        title,
+        content,
+        price,
+        imageUrl,
+        qty,
+        maxStock: maxBuy,
+        description: description?.trim() || undefined,
+        unit: unit?.trim() || undefined,
+      });
+
+      setIsSuccessOpen(true);
+    } catch (err) {
+      setIsErrorOpen(true);
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   return (
@@ -83,9 +96,21 @@ export default function InfoProductActions({
           {maxBuy <= 0 ? "目前無庫存" : `庫存僅剩 ${maxBuy} 枚`}
         </p>
       </div>
-      <Button className="w-full" disabled={maxBuy <= 0} type="button" onClick={handleAdd}>
-        加入購物車
+      <Button
+        className="w-full"
+        disabled={maxBuy <= 0 || isAdding}
+        type="button"
+        onClick={handleAdd}
+      >
+        {isAdding ? "加入中…" : "加入購物車"}
       </Button>
+
+      <SuccessModal open={isSuccessOpen} title="已加入" onConfirm={() => setIsSuccessOpen(false)} />
+      <ErrorModal
+        open={isErrorOpen}
+        title="失敗"
+        onClose={() => setIsErrorOpen(false)}
+      />
     </div>
   );
 }

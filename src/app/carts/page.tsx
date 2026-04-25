@@ -27,11 +27,8 @@ export default function CartsPage() {
   const [step, setStep] = useState<CartStep>(1);
   const shippingFormRef = useRef<HTMLFormElement | null>(null);
 
-  const shippingJPY = 800;
-  const feeJPY = 0;
-  const subtotalJPY = useMemo(() => items.reduce((sum, i) => sum + i.price * i.qty, 0), [items]);
+  const totalPrice = useMemo(() => items.reduce((sum, i) => sum + i.price * i.qty, 0), [items]);
   const cartUnitCount = useMemo(() => items.reduce((n, i) => n + i.qty, 0), [items]);
-  const totalJPY = subtotalJPY + (items.length > 0 ? shippingJPY : 0) + feeJPY;
 
   const [name, setName] = useState("");
   const [tel, setTel] = useState("");
@@ -140,11 +137,7 @@ export default function CartsPage() {
           {step === 3 && (
             <CartSummaryPanel
               step={step}
-              itemCount={cartUnitCount}
-              subtotalJPY={subtotalJPY}
-              shippingJPY={shippingJPY}
-              feeJPY={feeJPY}
-              totalJPY={totalJPY}
+              items={items}
               isSubmitting={orderSubmitting}
               onConfirmPay={async () => {
                 setOrderError(null);
@@ -178,7 +171,7 @@ export default function CartsPage() {
           {payDialogOrderId ? (
             <PaymentConfirmDialog
               orderId={payDialogOrderId}
-              totalFormatted={`${totalJPY}元`}
+              totalFormatted={`${totalPrice}元`}
               isPaying={paySubmitting}
               payError={payError}
               onCancel={() => {
