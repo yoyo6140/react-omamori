@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { fetchCustomerOrder, type CustomerOrderDetail } from "@/hooks/useClientCarts";
+import Loading from "@/components/common/Loading";
 
 type Props = {
   orderId: string;
@@ -66,7 +67,9 @@ export default function PaidFinishOrders({ orderId, onClose }: Props) {
         </h2>
 
         {loading ? (
-          <p className="text-sm text-black/60">載入訂單資料中…</p>
+          <div className="py-10">
+            <Loading label="載入訂單資料中…" className="w-full" />
+          </div>
         ) : error ? (
           <div className="space-y-4">
             <div

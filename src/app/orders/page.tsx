@@ -24,6 +24,7 @@ import { EditIcon, TrashIcon } from "lucide-react";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import SuccessModal from "@/components/common/SuccessModal";
 import ErrorModal from "@/components/common/ErrorModal";
+import Loading from "@/components/common/Loading";
 import { AdminOrder, useAdminOrders } from "@/hooks/useAdminOrders";
 import { EditOrderModal } from "@/components/orders/EditOrder";
 
@@ -61,8 +62,8 @@ export default function OrdersPage() {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center text-black/60">
-                    載入中...
+                  <TableCell colSpan={4} className="py-10">
+                    <Loading label={null} className="w-full" />
                   </TableCell>
                 </TableRow>
               ) : errorMessage ? (

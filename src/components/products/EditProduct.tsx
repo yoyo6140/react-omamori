@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import SuccessModal from "@/components/common/SuccessModal";
 import ErrorModal from "@/components/common/ErrorModal";
+import Loading from "@/components/common/Loading";
 import { useAdminProducts } from "@/hooks/useAdminProducts";
 
 type GetAdminProduct = {
@@ -152,7 +153,7 @@ export default function EditProduct({
     run();
   }, [id]);
 
-  if (!hasLoaded && isLoading) return <div>載入中...</div>;
+  if (!hasLoaded && isLoading) return <Loading fullScreen label={null} />;
   if (!hasLoaded && errorMessage) return <div className="text-red-600">{errorMessage}</div>;
   if (!hasLoaded && (!product || !form)) return <div>尚無資料</div>;
 

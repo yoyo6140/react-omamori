@@ -7,9 +7,7 @@ import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -28,6 +26,7 @@ import { useAdminProducts } from "@/hooks/useAdminProducts";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import SuccessModal from "@/components/common/SuccessModal";
 import ErrorModal from "@/components/common/ErrorModal";
+import Loading from "@/components/common/Loading";
 import { EditProductModal } from "@/components/products/EditProduct";
 import { AddProductModal } from "@/components/products/AddProduct";
 
@@ -55,15 +54,19 @@ const ProductsPage = () => {
   // 直接由 API products 推導畫面資料（避免切頁時上一頁資料閃一下）
   const localProducts: ProductRow[] = useMemo(
     () =>
-      products.map((p: any) => ({
-        id: p.id,
-        title: p.title ?? "",
-        category: p.category ?? "",
-        content: p.content ?? "",
-        num: Number(p.num ?? 0),
-        price: Number(p.price ?? 0),
-        is_enabled: (p.is_enabled ?? 0) as 0 | 1,
-      })),
+      products.map((p: unknown) => {
+        const obj: Record<string, unknown> =
+          p && typeof p === "object" ? (p as Record<string, unknown>) : {};
+        const id = typeof obj.id === "string" ? obj.id : "";
+        const title = typeof obj.title === "string" ? obj.title : "";
+        const category = typeof obj.category === "string" ? obj.category : "";
+        const content = typeof obj.content === "string" ? obj.content : "";
+        const num = typeof obj.num === "number" ? obj.num : Number(obj.num ?? 0);
+        const price = typeof obj.price === "number" ? obj.price : Number(obj.price ?? 0);
+        const is_enabled = obj.is_enabled === 1 ? 1 : 0;
+
+        return { id, title, category, content, num, price, is_enabled };
+      }),
     [products],
   );
 
@@ -88,8 +91,8 @@ const ProductsPage = () => {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-black/60">
-                    載入中...
+                  <TableCell colSpan={5} className="py-10">
+                    <Loading label={null} className="w-full" />
                   </TableCell>
                 </TableRow>
               ) : errorMessage ? (

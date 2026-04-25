@@ -16,6 +16,7 @@ import { EditIcon, TrashIcon } from "lucide-react";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import SuccessModal from "@/components/common/SuccessModal";
 import ErrorModal from "@/components/common/ErrorModal";
+import Loading from "@/components/common/Loading";
 import { AdminCoupon, useAdminCoupons } from "@/hooks/useAdminCoupons";
 import { AddCouponModal } from "@/components/coupons/AddCoupon";
 import { EditCouponModal } from "@/components/coupons/Editcoupon";
@@ -61,8 +62,8 @@ const CouponsPage = () => {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-black/60">
-                    載入中...
+                  <TableCell colSpan={6} className="py-10">
+                    <Loading label={null} className="w-full" />
                   </TableCell>
                 </TableRow>
               ) : errorMessage ? (
