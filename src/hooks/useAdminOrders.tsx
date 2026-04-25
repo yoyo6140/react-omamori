@@ -72,10 +72,7 @@ export function useAdminOrders() {
 
   async function editOrder(id: string, data: Partial<AdminOrder>) {
     const url = `${baseURL}/v2/api/${apiPath}${ADMIN_ORDER_URL}/${id}`;
-    const res = await adminApi.put<AdminOrderResponse>(
-      url,
-      { data: { ...(data as any) } },
-    );
+    const res = await adminApi.put<AdminOrderResponse>(url, { data: { ...(data as any) } });
     return res.data.order;
   }
 

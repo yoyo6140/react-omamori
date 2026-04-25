@@ -238,9 +238,7 @@ export default function AddProduct({
                     className="min-h-[140px]"
                     required
                     value={form.description}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, description: e.target.value }))
-                    }
+                    onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
                   />
                 </div>
               </div>
@@ -365,4 +363,3 @@ export function AddProductModal({
     </div>
   );
 }
-

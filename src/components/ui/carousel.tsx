@@ -88,7 +88,7 @@ function CarouselPrevious({ className, ...props }: React.ButtonHTMLAttributes<HT
       disabled={!canScrollPrev}
       className={cn(
         "absolute -left-3 top-1/2 -translate-y-1/2 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur transition hover:bg-black/55 disabled:opacity-30",
-        className
+        className,
       )}
       aria-label="Previous slide"
       {...props}
@@ -107,7 +107,7 @@ function CarouselNext({ className, ...props }: React.ButtonHTMLAttributes<HTMLBu
       disabled={!canScrollNext}
       className={cn(
         "absolute -right-3 top-1/2 -translate-y-1/2 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur transition hover:bg-black/55 disabled:opacity-30",
-        className
+        className,
       )}
       aria-label="Next slide"
       {...props}
@@ -117,5 +117,11 @@ function CarouselNext({ className, ...props }: React.ButtonHTMLAttributes<HTMLBu
   );
 }
 
-export { type CarouselApi, Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious };
-
+export {
+  type CarouselApi,
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+};

@@ -77,8 +77,7 @@ export default async function InfoPage({ params }: { params: Promise<{ id: strin
                 {product.title}
               </h1>
               <p className="mb-6 text-2xl font-light text-gray-500">
-                {price}元
-                <span className="ml-2 text-sm text-gray-400">（含稅）</span>
+                {price}元<span className="ml-2 text-sm text-gray-400">（含稅）</span>
               </p>
               <div className="flex flex-wrap  text-xl gap-4">
                 <span className="border border-gray-200 px-3 py-1  uppercase tracking-widest">

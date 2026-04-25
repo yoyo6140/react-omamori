@@ -248,174 +248,182 @@ export default function EditProduct({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label className="font-bold text-black">產品名稱</Label>
-              <Input
-                required
-                value={viewForm.title ?? ""}
-                onChange={(e) =>
-                  setForm((prev) => (prev ? { ...prev, title: e.target.value } : prev))
-                }
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="font-bold text-black">分類</Label>
-              <select
-                required
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
-                value={viewForm.category ?? "其他"}
-                onChange={(e) =>
-                  setForm((prev) => (prev ? { ...prev, category: e.target.value } : prev))
-                }
-              >
-                <option value="關東">關東</option>
-                <option value="關西">關西</option>
-                <option value="九州">九州</option>
-                <option value="北海道">北海道</option>
-                <option value="其他">其他</option>
-              </select>
-            </div>
-            <div className="space-y-2">
-              <Label className="font-bold text-black">單位</Label>
-              <Input
-                required
-                value={viewForm.unit ?? ""}
-                onChange={(e) =>
-                  setForm((prev) => (prev ? { ...prev, unit: e.target.value } : prev))
-                }
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="font-bold text-black">數量</Label>
-              <Input
-                type="number"
-                required
-                value={viewForm.num === undefined ? "" : String(viewForm.num)}
-                onChange={(e) =>
-                  setForm((prev) =>
-                    prev
-                      ? { ...prev, num: e.target.value === "" ? undefined : Number(e.target.value) }
-                      : prev,
-                  )
-                }
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="font-bold text-black">原價</Label>
-              <Input
-                type="number"
-                required
-                value={viewForm.origin_price === undefined ? "" : String(viewForm.origin_price)}
-                onChange={(e) =>
-                  setForm((prev) =>
-                    prev
-                      ? {
-                          ...prev,
-                          origin_price: e.target.value === "" ? undefined : Number(e.target.value),
-                        }
-                      : prev,
-                  )
-                }
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="font-bold text-black">售價</Label>
-              <Input
-                type="number"
-                required
-                value={viewForm.price === undefined ? "" : String(viewForm.price)}
-                onChange={(e) =>
-                  setForm((prev) =>
-                    prev
-                      ? {
-                          ...prev,
-                          price: e.target.value === "" ? undefined : Number(e.target.value),
-                        }
-                      : prev,
-                  )
-                }
-              />
-            </div>
-          </div>
-
-          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3 lg:items-stretch">
-            <div className="lg:col-span-2 flex flex-col gap-4 h-full">
-              <div className="space-y-2 flex-1">
-                <Label className="font-bold text-black">內容</Label>
-                <Textarea
-                  className="min-h-[140px]"
+              <div className="space-y-2">
+                <Label className="font-bold text-black">產品名稱</Label>
+                <Input
                   required
-                  value={viewForm.content ?? ""}
+                  value={viewForm.title ?? ""}
                   onChange={(e) =>
-                    setForm((prev) => (prev ? { ...prev, content: e.target.value } : prev))
+                    setForm((prev) => (prev ? { ...prev, title: e.target.value } : prev))
                   }
                 />
               </div>
-              <div className="space-y-2 flex-1">
-                <Label className="font-bold text-black">描述</Label>
-                <Textarea
-                  className="min-h-[140px]"
+              <div className="space-y-2">
+                <Label className="font-bold text-black">分類</Label>
+                <select
                   required
-                  value={viewForm.description ?? ""}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+                  value={viewForm.category ?? "其他"}
                   onChange={(e) =>
-                    setForm((prev) => (prev ? { ...prev, description: e.target.value } : prev))
+                    setForm((prev) => (prev ? { ...prev, category: e.target.value } : prev))
                   }
-                />
-              </div>
-            </div>
-
-            <div className="lg:col-span-1 flex flex-col gap-2 h-full">
-              <Label className="font-bold text-black">圖片</Label>
-              <Input
-                required
-                value={viewForm.imageUrl ?? ""}
-                onChange={(e) =>
-                  setForm((prev) => (prev ? { ...prev, imageUrl: e.target.value } : prev))
-                }
-              />
-              <div className="flex flex-col gap-2">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleUpload}
-                  disabled={!file || uploading}
                 >
-                  {uploading ? "上傳中..." : "上傳主圖片"}
-                </Button>
-                {uploadedUrl ? (
-                  <div className="text-xs text-black/60 break-all">已上傳：{uploadedUrl}</div>
-                ) : null}
+                  <option value="關東">關東</option>
+                  <option value="關西">關西</option>
+                  <option value="九州">九州</option>
+                  <option value="北海道">北海道</option>
+                  <option value="其他">其他</option>
+                </select>
               </div>
-              {viewForm.imageUrl ? (
-                <div className="mt-2 flex-1 min-h-[290px] w-full overflow-hidden rounded-lg border border-black/10">
-                  <img src={viewForm.imageUrl} alt="主圖" className="h-full w-full object-cover" />
-                </div>
-              ) : (
-                <div className="mt-2 flex-1 min-h-[290px] w-full rounded-lg border border-dashed border-black/20 bg-black/[0.02]" />
-              )}
+              <div className="space-y-2">
+                <Label className="font-bold text-black">單位</Label>
+                <Input
+                  required
+                  value={viewForm.unit ?? ""}
+                  onChange={(e) =>
+                    setForm((prev) => (prev ? { ...prev, unit: e.target.value } : prev))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-bold text-black">數量</Label>
+                <Input
+                  type="number"
+                  required
+                  value={viewForm.num === undefined ? "" : String(viewForm.num)}
+                  onChange={(e) =>
+                    setForm((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            num: e.target.value === "" ? undefined : Number(e.target.value),
+                          }
+                        : prev,
+                    )
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-bold text-black">原價</Label>
+                <Input
+                  type="number"
+                  required
+                  value={viewForm.origin_price === undefined ? "" : String(viewForm.origin_price)}
+                  onChange={(e) =>
+                    setForm((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            origin_price:
+                              e.target.value === "" ? undefined : Number(e.target.value),
+                          }
+                        : prev,
+                    )
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-bold text-black">售價</Label>
+                <Input
+                  type="number"
+                  required
+                  value={viewForm.price === undefined ? "" : String(viewForm.price)}
+                  onChange={(e) =>
+                    setForm((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            price: e.target.value === "" ? undefined : Number(e.target.value),
+                          }
+                        : prev,
+                    )
+                  }
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="mt-6 flex items-center justify-center gap-2">
-            <Button variant="outline" type="button" onClick={() => onCancel?.()}>
-              取消
-            </Button>
-            <Button
-              type="button"
-              onClick={() => {
-                const ok = formRef.current?.reportValidity() ?? true;
-                if (!ok) return;
-                setIsConfirmOpen(true);
-              }}
-            >
-              送出
-            </Button>
-          </div>
+            <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3 lg:items-stretch">
+              <div className="lg:col-span-2 flex flex-col gap-4 h-full">
+                <div className="space-y-2 flex-1">
+                  <Label className="font-bold text-black">內容</Label>
+                  <Textarea
+                    className="min-h-[140px]"
+                    required
+                    value={viewForm.content ?? ""}
+                    onChange={(e) =>
+                      setForm((prev) => (prev ? { ...prev, content: e.target.value } : prev))
+                    }
+                  />
+                </div>
+                <div className="space-y-2 flex-1">
+                  <Label className="font-bold text-black">描述</Label>
+                  <Textarea
+                    className="min-h-[140px]"
+                    required
+                    value={viewForm.description ?? ""}
+                    onChange={(e) =>
+                      setForm((prev) => (prev ? { ...prev, description: e.target.value } : prev))
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="lg:col-span-1 flex flex-col gap-2 h-full">
+                <Label className="font-bold text-black">圖片</Label>
+                <Input
+                  required
+                  value={viewForm.imageUrl ?? ""}
+                  onChange={(e) =>
+                    setForm((prev) => (prev ? { ...prev, imageUrl: e.target.value } : prev))
+                  }
+                />
+                <div className="flex flex-col gap-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleUpload}
+                    disabled={!file || uploading}
+                  >
+                    {uploading ? "上傳中..." : "上傳主圖片"}
+                  </Button>
+                  {uploadedUrl ? (
+                    <div className="text-xs text-black/60 break-all">已上傳：{uploadedUrl}</div>
+                  ) : null}
+                </div>
+                {viewForm.imageUrl ? (
+                  <div className="mt-2 flex-1 min-h-[290px] w-full overflow-hidden rounded-lg border border-black/10">
+                    <img
+                      src={viewForm.imageUrl}
+                      alt="主圖"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="mt-2 flex-1 min-h-[290px] w-full rounded-lg border border-dashed border-black/20 bg-black/[0.02]" />
+                )}
+              </div>
+            </div>
+
+            <div className="mt-6 flex items-center justify-center gap-2">
+              <Button variant="outline" type="button" onClick={() => onCancel?.()}>
+                取消
+              </Button>
+              <Button
+                type="button"
+                onClick={() => {
+                  const ok = formRef.current?.reportValidity() ?? true;
+                  if (!ok) return;
+                  setIsConfirmOpen(true);
+                }}
+              >
+                送出
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
