@@ -1,7 +1,6 @@
 "use client";
 
 import type { CartItem } from "./types";
-import { formatJPY } from "./format-jpy";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 
@@ -51,10 +50,10 @@ export default function CartShippingStep({
                   <div className="font-semibold">{line.title}</div>
                   <div className="flex items-center gap-4">
                     <div className="tabular-nums text-black/70">
-                      單數：{formatJPY(line.price)} × {line.qty}{" "}
+                      單數：{line.price}元 × {line.qty}{" "}
                     </div>
                     <div className="font-medium text-[var(--torii-red)]">
-                      總數:{formatJPY(line.price * line.qty)}
+                      總數:{line.price * line.qty}元
                     </div>
                   </div>
                 </div>

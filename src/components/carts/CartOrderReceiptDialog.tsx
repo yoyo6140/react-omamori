@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { fetchCustomerOrder, type CustomerOrderDetail } from "@/hooks/useClientCarts";
-import { formatJPY } from "./format-jpy";
 
 type Props = {
   orderId: string;
@@ -170,11 +169,11 @@ export default function CartOrderReceiptDialog({ orderId, onClose }: Props) {
                         <div className="min-w-0">
                           <div className="font-medium text-[var(--sumi-black)]">{title}</div>
                           <div className="text-xs text-black/50">
-                            {formatJPY(price)} × {qty}
+                            {price}元 × {qty}
                           </div>
                         </div>
                         <div className="shrink-0 tabular-nums font-semibold">
-                          {formatJPY(price * qty)}
+                          {price * qty}元
                         </div>
                       </li>
                     );
@@ -183,7 +182,7 @@ export default function CartOrderReceiptDialog({ orderId, onClose }: Props) {
                 {total != null ? (
                   <div className="mt-4 flex justify-between border-t border-black/10 pt-3 font-bold">
                     <span>總計</span>
-                    <span className="text-[var(--torii-red)]">{formatJPY(total)}</span>
+                    <span className="text-[var(--torii-red)]">{total}元</span>
                   </div>
                 ) : null}
               </div>

@@ -11,7 +11,6 @@ import {
   CartStepTabs,
   CartSummaryPanel,
   CartWishlistStep,
-  formatJPY,
   type CartStep,
 } from "@/components/carts";
 import { Button } from "@/components/ui/button";
@@ -174,7 +173,7 @@ export default function CartsPage() {
           {payDialogOrderId ? (
             <CartPaymentConfirmDialog
               orderId={payDialogOrderId}
-              totalFormatted={formatJPY(totalJPY)}
+              totalFormatted={`${totalJPY}元`}
               isPaying={paySubmitting}
               payError={payError}
               onCancel={() => {

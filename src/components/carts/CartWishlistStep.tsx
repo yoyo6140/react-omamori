@@ -11,7 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { CartItem } from "./types";
-import { formatJPY } from "./format-jpy";
 import { TrashIcon } from "lucide-react";
 
 const MAX_QTY = 99;
@@ -74,10 +73,10 @@ export default function CartWishlistStep({ items, onRemoveItem, onQuantityChange
                         </div>
                       </TableCell>
                       <TableCell className="text-center font-medium tabular-nums">
-                        {formatJPY(p.price)}
+                        {p.price}元
                       </TableCell>
                       <TableCell className="text-center font-bold tabular-nums">
-                        {formatJPY(lineTotal)}
+                        {lineTotal}元
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-center gap-1">

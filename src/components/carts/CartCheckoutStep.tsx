@@ -1,7 +1,6 @@
 "use client";
 
 import type { CartItem } from "./types";
-import { formatJPY } from "./format-jpy";
 
 type Props = {
   items: CartItem[];
@@ -53,9 +52,9 @@ export default function CartCheckoutStep({ items, name, tel, email, address }: P
                   <div className="text-xs italic text-gray-400">內容：{p.content}</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-bold">{formatJPY(p.price * p.qty)}</div>
+                  <div className="font-bold">{p.price * p.qty}元</div>
                   <div className="text-xs text-gray-400">
-                    {formatJPY(p.price)} × {p.qty}
+                    {p.price}元 × {p.qty}
                   </div>
                 </div>
               </div>
