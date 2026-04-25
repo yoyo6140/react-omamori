@@ -106,11 +106,7 @@ export default function InfoProductActions({
       </Button>
 
       <SuccessModal open={isSuccessOpen} title="已加入" onConfirm={() => setIsSuccessOpen(false)} />
-      <ErrorModal
-        open={isErrorOpen}
-        title="失敗"
-        onClose={() => setIsErrorOpen(false)}
-      />
+      <ErrorModal open={isErrorOpen} title="失敗" onClose={() => setIsErrorOpen(false)} />
     </div>
   );
 }

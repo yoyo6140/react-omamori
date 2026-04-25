@@ -8,7 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import SuccessModal from "@/components/common/SuccessModal";
 import ErrorModal from "@/components/common/ErrorModal";
@@ -209,7 +216,9 @@ export default function EditOrder({
                             {item.product?.title ?? item.product_id}
                           </TableCell>
                           <TableCell className="text-center">{item.qty}</TableCell>
-                          <TableCell className="text-center">{item.total ?? item.final_total ?? "-"}</TableCell>
+                          <TableCell className="text-center">
+                            {item.total ?? item.final_total ?? "-"}
+                          </TableCell>
                         </TableRow>
                       ))
                     ) : (
@@ -283,4 +292,3 @@ export default function EditOrder({
     </div>
   );
 }
-

@@ -53,7 +53,9 @@ export default function SearchOrders({ detail, apiOrderId, onPay, payLoading, pa
             >
               {paid ? "已付款" : "未付款"}
             </span>
-            {paidDateText ? <div className="text-xs text-black/55">付款時間：{paidDateText}</div> : null}
+            {paidDateText ? (
+              <div className="text-xs text-black/55">付款時間：{paidDateText}</div>
+            ) : null}
           </div>
         </div>
 
@@ -163,4 +165,3 @@ export default function SearchOrders({ detail, apiOrderId, onPay, payLoading, pa
     </section>
   );
 }
-

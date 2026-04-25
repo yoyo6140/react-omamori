@@ -24,7 +24,7 @@ export default function Sakura({ count = 30 }: { count?: number }) {
         duration: `${randomBetween(10, 15)}s`,
         size: `${randomBetween(5, 15)}px`,
       })),
-    [count]
+    [count],
   );
 
   useEffect(() => {
@@ -58,4 +58,3 @@ export default function Sakura({ count = 30 }: { count?: number }) {
     />
   );
 }
-
