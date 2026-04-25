@@ -30,10 +30,50 @@ export async function postClientCartLine(body: ClientCartPostBody) {
   }
 }
 
-/** 結帳前將品項逐筆 POST 至 `/cart`，再建立訂單時伺服器購物車才會正確 */
+type ServerCartLine = {
+  id?: string;
+  product_id?: string;
+  qty?: number;
+  [key: string]: unknown;
+};
+
+async function fetchServerCartLines(): Promise<ServerCartLine[]> {
+  const res = await axios.get<unknown>(cartListUrl());
+  const root = res.data as Record<string, unknown>;
+  if (root && typeof root === "object" && root.success === false) {
+    throw new Error(typeof root.message === "string" ? root.message : "取得購物車失敗");
+  }
+  const data = root?.data;
+  const carts =
+    data && typeof data === "object" ? (data as Record<string, unknown>).carts : undefined;
+  return Array.isArray(carts) ? (carts as ServerCartLine[]) : [];
+}
+
+async function deleteServerCartLine(lineId: string) {
+  const res = await axios.delete<unknown>(`${cartListUrl()}/${encodeURIComponent(lineId)}`);
+  const root = res.data as Record<string, unknown>;
+  if (root && typeof root === "object" && root.success === false) {
+    throw new Error(typeof root.message === "string" ? root.message : "刪除購物車品項失敗");
+  }
+}
+
+async function clearServerCart() {
+  const lines = await fetchServerCartLines();
+  for (const line of lines) {
+    const id = typeof line?.id === "string" ? line.id : "";
+    if (!id) continue;
+    await deleteServerCartLine(id);
+  }
+}
+
+/**
+ * 結帳前將品項逐筆 POST 至 `/cart`，再建立訂單時伺服器購物車才會正確。
+ * 因此這裡採「先清空後端購物車再重建」避免重複累加。
+ */
 export async function syncCheckoutCartToServer(
   lines: readonly { product_id: string; qty: number }[],
 ) {
+  await clearServerCart();
   for (const line of lines) {
     await postClientCartLine({ data: line });
   }

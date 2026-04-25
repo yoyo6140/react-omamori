@@ -2,18 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  fetchCustomerOrder,
-  type CustomerOrderDetail,
-} from "@/hooks/useClientCarts";
-import { formatJPY } from "./format-jpy";
+import { fetchCustomerOrder, type CustomerOrderDetail } from "@/hooks/useClientCarts";
+import Loading from "@/components/common/Loading";
 
 type Props = {
   orderId: string;
   onClose: () => void;
 };
 
-export default function CartOrderReceiptDialog({ orderId, onClose }: Props) {
+export default function PaidFinishOrders({ orderId, onClose }: Props) {
   const [detail, setDetail] = useState<CustomerOrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,7 +67,9 @@ export default function CartOrderReceiptDialog({ orderId, onClose }: Props) {
         </h2>
 
         {loading ? (
-          <p className="text-sm text-black/60">載入訂單資料中…</p>
+          <div className="py-10">
+            <Loading label="載入訂單資料中…" className="w-full" />
+          </div>
         ) : error ? (
           <div className="space-y-4">
             <div
@@ -173,12 +172,10 @@ export default function CartOrderReceiptDialog({ orderId, onClose }: Props) {
                         <div className="min-w-0">
                           <div className="font-medium text-[var(--sumi-black)]">{title}</div>
                           <div className="text-xs text-black/50">
-                            {formatJPY(price)} × {qty}
+                            {price}元 × {qty}
                           </div>
                         </div>
-                        <div className="shrink-0 tabular-nums font-semibold">
-                          {formatJPY(price * qty)}
-                        </div>
+                        <div className="shrink-0 tabular-nums font-semibold">{price * qty}元</div>
                       </li>
                     );
                   })}
@@ -186,7 +183,7 @@ export default function CartOrderReceiptDialog({ orderId, onClose }: Props) {
                 {total != null ? (
                   <div className="mt-4 flex justify-between border-t border-black/10 pt-3 font-bold">
                     <span>總計</span>
-                    <span className="text-[var(--torii-red)]">{formatJPY(total)}</span>
+                    <span className="text-[var(--torii-red)]">{total}元</span>
                   </div>
                 ) : null}
               </div>
@@ -201,3 +198,4 @@ export default function CartOrderReceiptDialog({ orderId, onClose }: Props) {
     </div>
   );
 }
+

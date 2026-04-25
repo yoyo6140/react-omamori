@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import React, { useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import Navbar from "@/components/common/Navbar";
+import Footer from "@/components/common/Footer";
 import {
-  CartOrderReceiptDialog,
-  CartPaymentConfirmDialog,
+  PaymentConfirmDialog,
   CartShippingStep,
   CartStepTabs,
   CartSummaryPanel,
   CartWishlistStep,
-  formatJPY,
+  PaidFinishOrders,
   type CartStep,
 } from "@/components/carts";
 import { Button } from "@/components/ui/button";
@@ -22,18 +22,13 @@ import {
 } from "@/hooks/useClientCarts";
 
 export default function CartsPage() {
-  const { items, removeItem, setLineQuantity, syncError, clearSyncError, clearCart } =
-    useCart();
+  const router = useRouter();
+  const { items, removeItem, setLineQuantity, syncError, clearSyncError, clearCart } = useCart();
   const [step, setStep] = useState<CartStep>(1);
+  const shippingFormRef = useRef<HTMLFormElement | null>(null);
 
-  const shippingJPY = 800;
-  const feeJPY = 0;
-  const subtotalJPY = useMemo(
-    () => items.reduce((sum, i) => sum + i.price * i.qty, 0),
-    [items],
-  );
+  const totalPrice = useMemo(() => items.reduce((sum, i) => sum + i.price * i.qty, 0), [items]);
   const cartUnitCount = useMemo(() => items.reduce((n, i) => n + i.qty, 0), [items]);
-  const totalJPY = subtotalJPY + (items.length > 0 ? shippingJPY : 0) + feeJPY;
 
   const [name, setName] = useState("");
   const [tel, setTel] = useState("");
@@ -61,7 +56,10 @@ export default function CartsPage() {
       const target = s + delta;
       if (target < 1 || target > 3) return s;
       if (delta === 1 && s === 1 && !canGoNextFrom1) return s;
-      if (delta === 1 && s === 2 && !canGoNextFrom2) return s;
+      if (delta === 1 && s === 2) {
+        const ok = shippingFormRef.current?.reportValidity() ?? canGoNextFrom2;
+        if (!ok) return s;
+      }
       return target as CartStep;
     });
   };
@@ -131,6 +129,7 @@ export default function CartsPage() {
               onEmailChange={setEmail}
               onAddressChange={setAddress}
               onMessageChange={setMessage}
+              formRef={shippingFormRef}
             />
           )}
 
@@ -138,11 +137,7 @@ export default function CartsPage() {
           {step === 3 && (
             <CartSummaryPanel
               step={step}
-              itemCount={cartUnitCount}
-              subtotalJPY={subtotalJPY}
-              shippingJPY={shippingJPY}
-              feeJPY={feeJPY}
-              totalJPY={totalJPY}
+              items={items}
               isSubmitting={orderSubmitting}
               onConfirmPay={async () => {
                 setOrderError(null);
@@ -174,15 +169,20 @@ export default function CartsPage() {
           )}
 
           {payDialogOrderId ? (
-            <CartPaymentConfirmDialog
+            <PaymentConfirmDialog
               orderId={payDialogOrderId}
-              totalFormatted={formatJPY(totalJPY)}
+              totalFormatted={`${totalPrice}元`}
               isPaying={paySubmitting}
               payError={payError}
               onCancel={() => {
                 if (paySubmitting) return;
+                const id = payDialogOrderId;
                 setPayDialogOrderId(null);
                 setPayError(null);
+                if (id) {
+                  clearCart();
+                  setReceiptOrderId(id);
+                }
               }}
               onConfirmPay={async () => {
                 if (!payDialogOrderId) return;
@@ -204,9 +204,12 @@ export default function CartsPage() {
           ) : null}
 
           {receiptOrderId ? (
-            <CartOrderReceiptDialog
+            <PaidFinishOrders
               orderId={receiptOrderId}
-              onClose={() => setReceiptOrderId(null)}
+              onClose={() => {
+                setReceiptOrderId(null);
+                router.push("/home");
+              }}
             />
           ) : null}
 

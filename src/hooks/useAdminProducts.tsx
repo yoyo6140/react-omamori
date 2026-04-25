@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { adminApi } from "@/lib/adminApi";
 
 const ADMIN_GET_PRODUCTS_ALL_URL = "/admin/products/all"; //取得全部商品列表
 const ADMIN_SEARCH_PRODUCT_ALL_URL = "/admin/products"; //搜尋商品列表
@@ -8,7 +7,6 @@ const ADMIN_PRODUCT_URL = "/admin/product"; //更新或刪除商品（單筆）
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 const apiPath = process.env.NEXT_PUBLIC_API_PATH;
-const token = Cookies.get("access_token");
 
 export type AdminProduct = {
   id: string;
@@ -53,14 +51,12 @@ export function useAdminProducts() {
   async function fetchAll() {
     setIsLoading(true);
     setErrorMessage(null);
+    // 避免在重新抓取時短暫顯示舊資料
+    setProducts([]);
 
     try {
       const url = `${baseURL}/v2/api/${apiPath}${ADMIN_GET_PRODUCTS_ALL_URL}`;
-      const res = await axios.get<AdminProductsAllResponse>(url, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await adminApi.get<AdminProductsAllResponse>(url);
 
       const obj = res.data?.products ?? {};
       setProducts(
@@ -77,20 +73,14 @@ export function useAdminProducts() {
   }
 
   async function fetchPage(page = 1) {
-    const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
-    const apiPath = process.env.NEXT_PUBLIC_API_PATH;
-    const token = Cookies.get("access_token");
-
     setIsLoading(true);
     setErrorMessage(null);
+    // 切頁時先清空，確保畫面只顯示 API 回來的那頁資料
+    setProducts([]);
 
     try {
       const url = `${baseURL}/v2/api/${apiPath}${ADMIN_SEARCH_PRODUCT_ALL_URL}?page=${page}`;
-      const res = await axios.get<AdminProductsPagedResponse>(url, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await adminApi.get<AdminProductsPagedResponse>(url);
 
       setProducts((res.data?.products ?? []) as AdminProduct[]);
       setPagination(res.data?.pagination ?? null);
@@ -108,27 +98,25 @@ export function useAdminProducts() {
 
   async function editProduct(id: string, data: Partial<AdminProduct>) {
     const url = `${baseURL}/v2/api/${apiPath}${ADMIN_PRODUCT_URL}/${id}`;
-    const res = await axios.put<AdminProductResponse>(
+    const res = await adminApi.put<AdminProductResponse>(
       url,
       { data: { id, ...(data as any) } },
-      { headers: { Authorization: token } },
     );
     return res.data.product;
   }
 
   async function addProduct(data: Partial<AdminProduct>) {
     const url = `${baseURL}/v2/api/${apiPath}${ADMIN_PRODUCT_URL}`;
-    const res = await axios.post<AdminProductResponse>(
+    const res = await adminApi.post<AdminProductResponse>(
       url,
       { data: { ...(data as any) } },
-      { headers: { Authorization: token } },
     );
     return res.data.product;
   }
 
   async function deleteProduct(id: string) {
     const url = `${baseURL}/v2/api/${apiPath}${ADMIN_PRODUCT_URL}/${id}`;
-    await axios.delete(url, { headers: { Authorization: token } });
+    await adminApi.delete(url);
   }
 
   return {

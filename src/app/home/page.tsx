@@ -1,8 +1,8 @@
 import React from "react";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/common/Navbar";
 import Hero from "../../components/home/Hero";
 import HomePageSections from "../../components/home/HomePageSections";
-import Footer from "../../components/Footer";
+import Footer from "../../components/common/Footer";
 import Sakura from "../../components/effects/Sakura";
 export default function HomePage() {
   return (
