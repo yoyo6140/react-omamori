@@ -51,7 +51,6 @@ export default function InfoProductActions({
       description: description?.trim() || undefined,
       unit: unit?.trim() || undefined,
     });
-    router.push("/carts");
   };
 
   return (
@@ -85,7 +84,7 @@ export default function InfoProductActions({
         </p>
       </div>
       <Button className="w-full" disabled={maxBuy <= 0} type="button" onClick={handleAdd}>
-        加入購物車並結緣
+        加入購物車
       </Button>
     </div>
   );
