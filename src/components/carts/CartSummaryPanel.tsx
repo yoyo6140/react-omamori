@@ -32,10 +32,6 @@ export default function CartSummaryPanel({
           <span className="text-lg">商品小計</span>
           <span>{subtotalJPY}元</span>
         </div>
-        <div className="flex justify-between">
-          <span className="text-lg">日本直送運費</span>
-          <span>{shippingJPY}元</span>
-        </div>
       </div>
       <div className="mb-12 flex items-end justify-between border-t border-gray-100 pt-8">
         <span className="font-bold">總計</span>

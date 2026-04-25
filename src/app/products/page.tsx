@@ -103,7 +103,7 @@ const ProductsPage = () => {
                   <TableRow key={p.id}>
                     <TableCell className="font-medium text-center">{p.category}</TableCell>
                     <TableCell className="text-center">{p.title}</TableCell>
-                    <TableCell className="text-center">{p.price}</TableCell>
+                    <TableCell className="text-center">{p.price}元</TableCell>
                     <TableCell className="w-[140px]">
                       <div className="flex items-center justify-center">
                         <Label>{p.is_enabled === 1 ? "啟用" : "停用"}</Label>

@@ -5,10 +5,6 @@ import Footer from "@/components/common/Footer";
 import InfoProductActions from "@/components/info/InfoProductActions";
 import type { ApiProduct } from "@/hooks/useClientCarts";
 
-function formatJPY(n: number) {
-  return `¥${n.toLocaleString("ja-JP")}`;
-}
-
 async function getProductById(id: string): Promise<ApiProduct | undefined> {
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
   const apiPath = process.env.NEXT_PUBLIC_API_PATH;
@@ -81,7 +77,7 @@ export default async function InfoPage({ params }: { params: Promise<{ id: strin
                 {product.title}
               </h1>
               <p className="mb-6 text-2xl font-light text-gray-500">
-                {formatJPY(price)}
+                {price}元
                 <span className="ml-2 text-sm text-gray-400">（含稅）</span>
               </p>
               <div className="flex flex-wrap  text-xl gap-4">

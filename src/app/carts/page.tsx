@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
 import {
-  CartOrderReceiptDialog,
-  CartPaymentConfirmDialog,
+  PaymentConfirmDialog,
   CartShippingStep,
   CartStepTabs,
   CartSummaryPanel,
   CartWishlistStep,
+  PaidFinishOrders,
   type CartStep,
 } from "@/components/carts";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,7 @@ export default function CartsPage() {
   const router = useRouter();
   const { items, removeItem, setLineQuantity, syncError, clearSyncError, clearCart } = useCart();
   const [step, setStep] = useState<CartStep>(1);
+  const shippingFormRef = useRef<HTMLFormElement | null>(null);
 
   const shippingJPY = 800;
   const feeJPY = 0;
@@ -58,7 +59,10 @@ export default function CartsPage() {
       const target = s + delta;
       if (target < 1 || target > 3) return s;
       if (delta === 1 && s === 1 && !canGoNextFrom1) return s;
-      if (delta === 1 && s === 2 && !canGoNextFrom2) return s;
+      if (delta === 1 && s === 2) {
+        const ok = shippingFormRef.current?.reportValidity() ?? canGoNextFrom2;
+        if (!ok) return s;
+      }
       return target as CartStep;
     });
   };
@@ -128,6 +132,7 @@ export default function CartsPage() {
               onEmailChange={setEmail}
               onAddressChange={setAddress}
               onMessageChange={setMessage}
+              formRef={shippingFormRef}
             />
           )}
 
@@ -171,7 +176,7 @@ export default function CartsPage() {
           )}
 
           {payDialogOrderId ? (
-            <CartPaymentConfirmDialog
+            <PaymentConfirmDialog
               orderId={payDialogOrderId}
               totalFormatted={`${totalJPY}元`}
               isPaying={paySubmitting}
@@ -206,7 +211,7 @@ export default function CartsPage() {
           ) : null}
 
           {receiptOrderId ? (
-            <CartOrderReceiptDialog
+            <PaidFinishOrders
               orderId={receiptOrderId}
               onClose={() => {
                 setReceiptOrderId(null);

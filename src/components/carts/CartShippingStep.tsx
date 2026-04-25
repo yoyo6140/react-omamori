@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import type { CartItem } from "./types";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -16,6 +17,7 @@ type Props = {
   onEmailChange: (v: string) => void;
   onAddressChange: (v: string) => void;
   onMessageChange: (v: string) => void;
+  formRef?: React.RefObject<HTMLFormElement | null>;
 };
 
 export default function CartShippingStep({
@@ -30,6 +32,7 @@ export default function CartShippingStep({
   onEmailChange,
   onAddressChange,
   onMessageChange,
+  formRef,
 }: Props) {
   return (
     <section>
@@ -63,13 +66,14 @@ export default function CartShippingStep({
         </div>
       ) : null}
 
-      <form className="grid grid-cols-2 gap-6">
+      <form ref={formRef} className="grid grid-cols-2 gap-6">
         <div className="col-span-2 space-y-2">
           <label className="text-lg font-bold  tracking-widest ">
             收件人全名<span className="text-red-500">*</span>
           </label>
           <Input
             type="text"
+            required
             placeholder="例如：佐藤 健"
             value={name}
             onChange={(e) => onNameChange(e.target.value)}
@@ -81,6 +85,7 @@ export default function CartShippingStep({
           </label>
           <Input
             type="tel"
+            required
             placeholder="0912-345-678"
             value={tel}
             onChange={(e) => onTelChange(e.target.value)}
@@ -92,6 +97,7 @@ export default function CartShippingStep({
           </label>
           <Input
             type="email"
+            required
             placeholder="email@example.com"
             value={email}
             onChange={(e) => onEmailChange(e.target.value)}
@@ -103,6 +109,7 @@ export default function CartShippingStep({
           </label>
           <Input
             type="text"
+            required
             placeholder="請輸入完整的收件地址..."
             value={address}
             onChange={(e) => onAddressChange(e.target.value)}

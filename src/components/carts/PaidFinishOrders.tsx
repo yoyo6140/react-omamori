@@ -9,7 +9,7 @@ type Props = {
   onClose: () => void;
 };
 
-export default function CartOrderReceiptDialog({ orderId, onClose }: Props) {
+export default function PaidFinishOrders({ orderId, onClose }: Props) {
   const [detail, setDetail] = useState<CustomerOrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -172,9 +172,7 @@ export default function CartOrderReceiptDialog({ orderId, onClose }: Props) {
                             {price}元 × {qty}
                           </div>
                         </div>
-                        <div className="shrink-0 tabular-nums font-semibold">
-                          {price * qty}元
-                        </div>
+                        <div className="shrink-0 tabular-nums font-semibold">{price * qty}元</div>
                       </li>
                     );
                   })}
@@ -197,3 +195,4 @@ export default function CartOrderReceiptDialog({ orderId, onClose }: Props) {
     </div>
   );
 }
+

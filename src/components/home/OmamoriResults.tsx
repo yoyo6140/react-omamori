@@ -26,10 +26,6 @@ export type OmamoriItem = {
   imageUrl?: string;
 };
 
-function formatJPY(n: number) {
-  return `¥${n.toLocaleString("ja-JP")}`;
-}
-
 export default function OmamoriResults({
   selectedRegion,
   items,
@@ -118,7 +114,7 @@ export default function OmamoriResults({
                               </p>
                             </div>
                             <span className="shrink-0 text-base sm:text-lg md:text-xl font-bold">
-                              {formatJPY(item.price)}
+                              {item.price}元
                             </span>
                           </div>
                           <p className="text-xs sm:text-sm text-gray-500 leading-relaxed italic overflow-hidden">
