@@ -15,8 +15,7 @@ export default function CartStepControls({
   canGoNextFrom2,
   onStepDelta,
 }: Props) {
-  const canGoNext =
-    step === 1 ? canGoNextFrom1 : step === 2 ? canGoNextFrom2 : false;
+  const canGoNext = step === 1 ? canGoNextFrom1 : step === 2 ? canGoNextFrom2 : false;
 
   return (
     <div className="flex items-center justify-between pt-2">

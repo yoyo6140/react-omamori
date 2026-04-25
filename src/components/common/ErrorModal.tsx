@@ -29,9 +29,10 @@ export default function ErrorModal({
           <Image src={AlertIcon} alt="error" width={40} height={40} />
           <div className="text-lg font-bold">{title}</div>
         </div>
-        {description ? <div className="mt-3 text-sm text-black/70 text-center">{description}</div> : null}
+        {description ? (
+          <div className="mt-3 text-sm text-black/70 text-center">{description}</div>
+        ) : null}
       </div>
     </div>
   );
 }
-

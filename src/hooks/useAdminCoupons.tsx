@@ -50,19 +50,13 @@ export function useAdminCoupons() {
 
   async function addCoupon(data: Omit<AdminCoupon, "id">) {
     const url = `${baseURL}/v2/api/${apiPath}${ADMIN_COUPON_URL}`;
-    const res = await adminApi.post<AdminCouponResponse>(
-      url,
-      { data: { ...(data as any) } },
-    );
+    const res = await adminApi.post<AdminCouponResponse>(url, { data: { ...(data as any) } });
     return res.data?.coupon;
   }
 
   async function editCoupon(id: string, data: Partial<AdminCoupon>) {
     const url = `${baseURL}/v2/api/${apiPath}${ADMIN_COUPON_URL}/${id}`;
-    const res = await adminApi.put<AdminCouponResponse>(
-      url,
-      { data: { ...(data as any) } },
-    );
+    const res = await adminApi.put<AdminCouponResponse>(url, { data: { ...(data as any) } });
     return res.data?.coupon;
   }
 

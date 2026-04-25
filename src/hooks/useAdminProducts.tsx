@@ -98,19 +98,13 @@ export function useAdminProducts() {
 
   async function editProduct(id: string, data: Partial<AdminProduct>) {
     const url = `${baseURL}/v2/api/${apiPath}${ADMIN_PRODUCT_URL}/${id}`;
-    const res = await adminApi.put<AdminProductResponse>(
-      url,
-      { data: { id, ...(data as any) } },
-    );
+    const res = await adminApi.put<AdminProductResponse>(url, { data: { id, ...(data as any) } });
     return res.data.product;
   }
 
   async function addProduct(data: Partial<AdminProduct>) {
     const url = `${baseURL}/v2/api/${apiPath}${ADMIN_PRODUCT_URL}`;
-    const res = await adminApi.post<AdminProductResponse>(
-      url,
-      { data: { ...(data as any) } },
-    );
+    const res = await adminApi.post<AdminProductResponse>(url, { data: { ...(data as any) } });
     return res.data.product;
   }
 

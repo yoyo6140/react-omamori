@@ -198,4 +198,3 @@ export default function PaidFinishOrders({ orderId, onClose }: Props) {
     </div>
   );
 }
-
