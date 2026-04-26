@@ -27,7 +27,7 @@ export default function TopBar() {
     <nav className="fixed w-full z-50 px-8 py-4 bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto flex items-center">
         <Link href="/home" className="text-2xl font-bold tracking-widest text-[#B22222] font-serif">
-          拾守｜管理後台
+          拾緣｜管理後台
         </Link>
 
         {/* Desktop Menu */}

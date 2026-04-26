@@ -180,6 +180,7 @@ export default function AddProduct({
                 <Input
                   type="number"
                   required
+                  onWheel={(e) => (e.currentTarget as HTMLInputElement).blur()}
                   value={form.num === undefined ? "" : String(form.num)}
                   onChange={(e) =>
                     setForm((prev) => ({
@@ -195,6 +196,7 @@ export default function AddProduct({
                 <Input
                   type="number"
                   required
+                  onWheel={(e) => (e.currentTarget as HTMLInputElement).blur()}
                   value={form.origin_price === undefined ? "" : String(form.origin_price)}
                   onChange={(e) =>
                     setForm((prev) => ({
@@ -210,6 +212,7 @@ export default function AddProduct({
                 <Input
                   type="number"
                   required
+                  onWheel={(e) => (e.currentTarget as HTMLInputElement).blur()}
                   value={form.price === undefined ? "" : String(form.price)}
                   onChange={(e) =>
                     setForm((prev) => ({

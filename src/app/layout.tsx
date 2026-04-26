@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Serif_JP, Poppins } from "next/font/google";
 import { Providers } from "@/components/common/providers";
+import logo from "@/asset/images/logo.png";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,10 +27,10 @@ const notoSerifJP = Noto_Serif_JP({
 });
 
 export const metadata: Metadata = {
-  title: "拾守",
+  title: "拾緣",
   description: "來自日本各地的祝福，將千年神社的守護帶到您的身邊。",
   icons: {
-    icon: [{ url: "/images/logo.jpeg" }],
+    icon: [{ url: logo.src }],
   },
 };
 

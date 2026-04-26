@@ -31,7 +31,7 @@ const Hero = () => {
         </h1>
 
         <p className="text-lg text-gray-600 max-w-lg mx-auto leading-relaxed">
-          跨越海洋與山川，將千年神社的守護帶到您的身邊。每一枚御守，都是一段跨時空的祈願。
+          你是否也曾因現實而放棄自己的願望與理想？在時間的推移裡遺忘了最初的自己？願這一枚御守，替你記得那些仍未熄滅的心願。
         </p>
 
         <div className="pt-8">

@@ -290,6 +290,7 @@ export default function EditProduct({
                 <Input
                   type="number"
                   required
+                  onWheel={(e) => (e.currentTarget as HTMLInputElement).blur()}
                   value={viewForm.num === undefined ? "" : String(viewForm.num)}
                   onChange={(e) =>
                     setForm((prev) =>
@@ -308,6 +309,7 @@ export default function EditProduct({
                 <Input
                   type="number"
                   required
+                  onWheel={(e) => (e.currentTarget as HTMLInputElement).blur()}
                   value={viewForm.origin_price === undefined ? "" : String(viewForm.origin_price)}
                   onChange={(e) =>
                     setForm((prev) =>
@@ -327,6 +329,7 @@ export default function EditProduct({
                 <Input
                   type="number"
                   required
+                  onWheel={(e) => (e.currentTarget as HTMLInputElement).blur()}
                   value={viewForm.price === undefined ? "" : String(viewForm.price)}
                   onChange={(e) =>
                     setForm((prev) =>

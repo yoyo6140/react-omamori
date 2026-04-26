@@ -154,7 +154,7 @@ export default function CartsPage() {
                         tel: tel.trim(),
                         address: address.trim(),
                       },
-                      message: message.trim() || "拾守官網結帳",
+                      message: message.trim() || "拾緣官網結帳",
                     },
                   });
                   setPayError(null);
