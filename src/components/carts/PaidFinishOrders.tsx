@@ -14,6 +14,7 @@ export default function PaidFinishOrders({ orderId, onClose }: Props) {
   const [detail, setDetail] = useState<CustomerOrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -47,6 +48,17 @@ export default function PaidFinishOrders({ orderId, onClose }: Props) {
         : undefined;
   const displayId = detail?.id ?? orderId;
   const orderNum = typeof detail?.num === "number" ? detail.num : undefined;
+
+  async function copyOrderNum() {
+    if (orderNum == null) return;
+    try {
+      await navigator.clipboard.writeText(String(orderNum));
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1200);
+    } catch {
+      // ignore
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
@@ -90,7 +102,15 @@ export default function PaidFinishOrders({ orderId, onClose }: Props) {
               </div>
               <div className="font-mono font-semibold text-[var(--sumi-black)]">{displayId}</div>
               {orderNum != null ? (
-                <div className="mt-2 text-xs text-black/55">序號：{orderNum}</div>
+                <button
+                  type="button"
+                  className="mt-2 inline-flex items-center gap-2 text-xs text-black/55 hover:text-[var(--torii-red)] underline underline-offset-4"
+                  onClick={copyOrderNum}
+                  aria-label={`複製序號 ${orderNum}`}
+                >
+                  序號：{orderNum}
+                  {copied ? <span className="text-[10px] text-emerald-700">已複製</span> : null}
+                </button>
               ) : null}
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span

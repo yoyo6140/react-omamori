@@ -42,7 +42,7 @@ export default function WishesSection({ onPick }: { onPick?: () => void }) {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-16">
-          {wishes.map(({ title, subtitle, Icon, tint, hover }) => (
+          {wishes.map(({ title, subtitle, Icon }) => (
             <div key={title} className="group text-center p-8 md:p-12 border border-gray-100 ">
               <div
                 className={

@@ -33,7 +33,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto flex items-center">
         {/* Logo */}
         <div className="text-2xl font-bold tracking-widest text-[#B22222] font-serif">
-          拾守｜祈願願望成真
+          拾緣｜祈願願望成真
         </div>
 
         {/* Desktop Menu */}
