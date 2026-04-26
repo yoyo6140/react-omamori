@@ -44,6 +44,32 @@ export default function LoginClient() {
     }
   }
 
+  const copyText = async (text: string) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+    const input = document.createElement("input");
+    input.value = text;
+    input.setAttribute("readonly", "true");
+    input.style.position = "fixed";
+    input.style.left = "-9999px";
+    input.style.top = "0";
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand("copy");
+    document.body.removeChild(input);
+  };
+
+  const handleCopy = async (text: string) => {
+    try {
+      await copyText(text);
+      alert("已複製");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[var(--off-white)] text-[var(--sumi-black)]">
       <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
@@ -148,8 +174,26 @@ export default function LoginClient() {
                 </button>
                 <div className="text-xs bg-red-50 rounded-lg p-2">
                   <div>僅供作品面試用途。請勿與他人分享登入資訊。</div>
-                  <div>abc142536798@gmail.com</div>
-                  <div>11111111</div>
+                  <div
+                    className="cursor-pointer select-all font-mono hover:underline"
+                    onClick={() => void handleCopy("abc142536798@gmail.com")}
+                    onTouchEnd={(e) => {
+                      e.preventDefault();
+                      void handleCopy("abc142536798@gmail.com");
+                    }}
+                  >
+                    abc142536798@gmail.com
+                  </div>
+                  <div
+                    className="cursor-pointer select-all font-mono hover:underline"
+                    onClick={() => void handleCopy("11111111")}
+                    onTouchEnd={(e) => {
+                      e.preventDefault();
+                      void handleCopy("11111111");
+                    }}
+                  >
+                    11111111
+                  </div>
                 </div>
               </form>
 
