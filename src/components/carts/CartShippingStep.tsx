@@ -66,8 +66,8 @@ export default function CartShippingStep({
         </div>
       ) : null}
 
-      <form ref={formRef} className="grid grid-cols-2 gap-6">
-        <div className="col-span-2 space-y-2">
+      <form ref={formRef} className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="space-y-2 md:col-span-2">
           <label className="text-lg font-bold  tracking-widest ">
             收件人全名<span className="text-red-500">*</span>
           </label>
@@ -103,7 +103,7 @@ export default function CartShippingStep({
             onChange={(e) => onEmailChange(e.target.value)}
           />
         </div>
-        <div className="col-span-2 space-y-2">
+        <div className="space-y-2 md:col-span-2">
           <label className="text-lg font-bold  tracking-widest ">
             寄送地址<span className="text-red-500">*</span>
           </label>
@@ -115,7 +115,7 @@ export default function CartShippingStep({
             onChange={(e) => onAddressChange(e.target.value)}
           />
         </div>
-        <div className="col-span-2 space-y-2">
+        <div className="space-y-2 md:col-span-2">
           <label className="text-lg font-bold  tracking-widest ">備註內容</label>
           <Textarea
             placeholder="請輸入備註內容（會一併送至訂單留言）…"

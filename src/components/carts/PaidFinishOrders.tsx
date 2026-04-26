@@ -14,7 +14,6 @@ export default function PaidFinishOrders({ orderId, onClose }: Props) {
   const [detail, setDetail] = useState<CustomerOrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -47,18 +46,33 @@ export default function PaidFinishOrders({ orderId, onClose }: Props) {
         ? detail.final_total
         : undefined;
   const displayId = detail?.id ?? orderId;
-  const orderNum = typeof detail?.num === "number" ? detail.num : undefined;
 
-  async function copyOrderNum() {
-    if (orderNum == null) return;
-    try {
-      await navigator.clipboard.writeText(String(orderNum));
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1200);
-    } catch {
-      // ignore
+  const copyText = async (text: string) => {
+    // iOS / 部分瀏覽器可能不支援或限制 Clipboard API（尤其在非安全環境）
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
     }
-  }
+    const input = document.createElement("input");
+    input.value = text;
+    input.setAttribute("readonly", "true");
+    input.style.position = "fixed";
+    input.style.left = "-9999px";
+    input.style.top = "0";
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand("copy");
+    document.body.removeChild(input);
+  };
+
+  const handleCopy = async () => {
+    try {
+      await copyText(String(displayId));
+      alert("已複製訂單編號");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
@@ -100,18 +114,16 @@ export default function PaidFinishOrders({ orderId, onClose }: Props) {
               <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-black/45">
                 訂單編號
               </div>
-              <div className="font-mono font-semibold text-[var(--sumi-black)]">{displayId}</div>
-              {orderNum != null ? (
-                <button
-                  type="button"
-                  className="mt-2 inline-flex items-center gap-2 text-xs text-black/55 hover:text-[var(--torii-red)] underline underline-offset-4"
-                  onClick={copyOrderNum}
-                  aria-label={`複製序號 ${orderNum}`}
-                >
-                  序號：{orderNum}
-                  {copied ? <span className="text-[10px] text-emerald-700">已複製</span> : null}
-                </button>
-              ) : null}
+              <span
+                onClick={handleCopy}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  void handleCopy();
+                }}
+                className="block cursor-pointer font-mono font-semibold text-[var(--sumi-black)] hover:underline"
+              >
+                {displayId}
+              </span>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span
                   className={
